@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Connections: APIs and MCP — Vibe Programming, Session 9 – Vibe Programming</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/week-10-ai-in-your-app.html" rel="next">
+<link href="../chapters/week-08-deployment.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8575377b15774f46c10fa1d7752ca172.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<meta name="robots" content="noindex, nofollow">
+<script>
+  window.hypothesisConfig = function () {
+    return { groupsAllowlist: ["zJ3jnJaK"] };
+  };
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/week-09-apis-and-mcp.html"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Vibe Programming</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About these readings</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-00-build-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Build and Publish Your App — Vibe Programming, Session 0</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-01-directing-the-agent.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-02-architecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-03-github.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">GitHub: Save Points, Review and the Human in the Loop — Vibe Programming, Session 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-04-user-experience.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">User Experience: Screens People Can Actually Use — Vibe Programming, Session 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-05-testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Testing: How Do You Know It Works? — Vibe Programming, Session 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-06-databases.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Databases: Where the Data Lives — Vibe Programming, Session 6</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-07-logins-and-security.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logins and Security: Who May Do What — Vibe Programming, Session 7</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-08-deployment.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-09-apis-and-mcp.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-10-ai-in-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">AI in Your App: Models and What They Cost — Vibe Programming, Session 10</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning objectives</a></li>
+  <li><a href="#the-big-idea-your-app-does-not-have-to-do-everything-itself" id="toc-the-big-idea-your-app-does-not-have-to-do-everything-itself" class="nav-link" data-scroll-target="#the-big-idea-your-app-does-not-have-to-do-everything-itself">The big idea: your app does not have to do everything itself</a></li>
+  <li><a href="#what-an-api-lets-your-app-do" id="toc-what-an-api-lets-your-app-do" class="nav-link" data-scroll-target="#what-an-api-lets-your-app-do">What an API lets your app do</a></li>
+  <li><a href="#before-you-connect-five-questions" id="toc-before-you-connect-five-questions" class="nav-link" data-scroll-target="#before-you-connect-five-questions">Before you connect: five questions</a></li>
+  <li><a href="#how-a-call-works-the-key-stays-on-your-server" id="toc-how-a-call-works-the-key-stays-on-your-server" class="nav-link" data-scroll-target="#how-a-call-works-the-key-stays-on-your-server">How a call works: the key stays on your server</a></li>
+  <li><a href="#when-a-connection-fails" id="toc-when-a-connection-fails" class="nav-link" data-scroll-target="#when-a-connection-fails">When a connection fails</a>
+  <ul class="collapse">
+  <li><a href="#what-agents-leave-out" id="toc-what-agents-leave-out" class="nav-link" data-scroll-target="#what-agents-leave-out">What agents leave out</a></li>
+  </ul></li>
+  <li><a href="#your-agents-connections-mcp" id="toc-your-agents-connections-mcp" class="nav-link" data-scroll-target="#your-agents-connections-mcp">Your agent’s connections: MCP</a>
+  <ul class="collapse">
+  <li><a href="#when-to-connect-your-agent" id="toc-when-to-connect-your-agent" class="nav-link" data-scroll-target="#when-to-connect-your-agent">When to connect your agent</a></li>
+  <li><a href="#what-a-connection-costs" id="toc-what-a-connection-costs" class="nav-link" data-scroll-target="#what-a-connection-costs">What a connection costs</a></li>
+  </ul></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms">Key terms</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Adapted and simplified from parts of three of Scott Murff’s chapters, <a href="https://byu-strategy.github.io/product-management/08-data-and-apis.html">Data and APIs</a>, <a href="https://byu-strategy.github.io/product-management/07-anatomy-of-an-application.html">Anatomy of an Application</a> and <a href="https://byu-strategy.github.io/product-management/02-directing-the-agent.html">Directing the Agent</a>, in his textbook Intro to Product Management. The ideas are his. The wording and the business examples were written for these readings.</em></p>
+<p>Reading time: about 20 minutes. Class opens with a short quiz on this reading.</p>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning objectives</h2>
+<p>By the end of this session you can:</p>
+<ol type="1">
+<li>Explain what an API is, and give examples of jobs your app could hand to an outside service.</li>
+<li>Name the questions to ask before you connect your app to a service.</li>
+<li>Say where the secret key travels when your app calls a service, and why the browser never holds it.</li>
+<li>Decide what the user should see when a connection fails, and test it.</li>
+<li>Tell apart a connection your app makes from one your agent makes, and give examples of when to connect your agent to another tool.</li>
+</ol>
+</section>
+<section id="the-big-idea-your-app-does-not-have-to-do-everything-itself" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-your-app-does-not-have-to-do-everything-itself">The big idea: your app does not have to do everything itself</h2>
+<p>So far your app has talked only to its own server and its own database. Real business software rarely works alone. It sends email through one company, takes card payments through another, and gets tracking numbers from a delivery company.</p>
+<p>Session 2 defined an <strong>API</strong> as the list of requests a system agrees to answer. When your app uses another company’s API, it can do things you could never build yourself in a semester.</p>
+<p>This session the example shop makes its first outside connection. It will email a shipping notice to a customer when an order ships. Your own app will make one outside connection of its own.</p>
+<p>There is a second subject. Your agent can also connect to your other tools while it builds, such as GitHub or a spreadsheet. A standard called MCP makes that possible.</p>
+<p>Here is the main point of the session: <strong>an outside connection lets your app or your agent do much more, but it reaches beyond your control. Choose each one on purpose, and decide what happens when it fails.</strong></p>
+</section>
+<section id="what-an-api-lets-your-app-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-an-api-lets-your-app-do">What an API lets your app do</h2>
+<p><strong>An API lets your app hand a job to another company’s service, without knowing how that service works inside.</strong></p>
+<p>The company that offers an API publishes its <strong>documentation</strong>. It lists each request the service accepts, what the request must include and what comes back. Your app never sees the company’s code or computers. As long as the documented requests keep working, your app keeps working. So the documentation works as a contract between the two sides.</p>
+<p>You do not need to read the documentation yourself. The agent reads it. Your job is to decide which jobs are worth handing out.</p>
+<p>Here are jobs that apps commonly hand to an outside service.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Job</th>
+<th>What the service does</th>
+<th>In the example shop</th>
+<th>In other apps</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Send email</td>
+<td>Delivers messages so they do not land in spam</td>
+<td>A shipping notice to the customer</td>
+<td>A reminder to club members before an event</td>
+</tr>
+<tr class="even">
+<td>Take payments</td>
+<td>Handles card numbers safely, so your app never stores them</td>
+<td>Online orders paid by card</td>
+<td>Membership dues or ticket sales</td>
+</tr>
+<tr class="odd">
+<td>Send text messages</td>
+<td>Delivers a text to a phone number</td>
+<td>“Your order is ready for pickup at the storefront”</td>
+<td>A shift reminder for staff</td>
+</tr>
+<tr class="even">
+<td>Check addresses and maps</td>
+<td>Confirms an address exists, or finds distances</td>
+<td>Catching a mistyped shipping address before the box goes out</td>
+<td>Finding the nearest volunteer site</td>
+</tr>
+<tr class="odd">
+<td>Track shipments</td>
+<td>Reports where a package is</td>
+<td>A tracking link in the shipping notice</td>
+<td>Status updates on a supplier’s delivery</td>
+</tr>
+<tr class="even">
+<td>Answer with AI</td>
+<td>Sends text to an AI model and returns its reply</td>
+<td>Session 10</td>
+<td>Session 10</td>
+</tr>
+</tbody>
+</table>
+<p>Each of these is a business of its own. Sending email reliably takes years of work with the big email providers. Holding card numbers safely takes audits and legal agreements. Using a service is a decision to rent that work instead of doing it.</p>
+<p>A shop makes the same choice about delivery. It does not buy trucks and hire drivers. It opens an account with a delivery company, and the delivery company does the driving.</p>
+<p><strong>Worked example.</strong> Look at the shop’s orders. When an order ships, the owner currently has to email the customer by hand, and some customers are never told. An email service can send the notice the moment the owner clicks Mark shipped. That saves the owner time, and customers stop calling to ask where their ice cream is.</p>
+<p>Now look at your own app. Which job does a person do by hand that an outside service could do? That is a candidate for your connection this session.</p>
+<p><strong>Rule of thumb:</strong> connect to a service when the job is someone else’s specialty and doing it by hand is costing you time or customers.</p>
+</section>
+<section id="before-you-connect-five-questions" class="level2">
+<h2 class="anchored" data-anchor-id="before-you-connect-five-questions">Before you connect: five questions</h2>
+<p><strong>A service is a supplier, so check it the way you would check a supplier before you sign.</strong></p>
+<p>Ask the agent to answer these five questions for any service you are considering. It can read the documentation and the pricing page for you. Then check its answers on the company’s own website.</p>
+<ol type="1">
+<li><strong>What does it cost?</strong> Many services have a free tier, a set amount of use each month at no charge. Find out what happens when you pass it.</li>
+<li><strong>What account and key do I need?</strong> Most services give your account an <strong>API key</strong>, the secret from session 2 that says whose account is calling. Your account gets the bill.</li>
+<li><strong>What are the limits?</strong> A <strong>rate limit</strong> is a cap on how many requests you may send in a period, such as 100 emails a day.</li>
+<li><strong>What data will I send it?</strong> Session 7’s rule applies. Personal data that leaves your database is in the other company’s hands.</li>
+<li><strong>What if it goes down, or I want to leave?</strong> Your feature stops working when the service does. And the more your app depends on one service, the harder it is to switch later.</li>
+</ol>
+<p>A purchasing team asks the same questions about a new supplier: price, terms, capacity, what you must share with them and how hard they are to replace.</p>
+<p><strong>Worked example.</strong> You ask the agent to compare two email services for the shop’s shipping notices. It reports that both are free for the shop’s few dozen emails a day. One needs the shop to prove it owns its sending address. Both need a key. The notice holds a customer’s name, email address and order. That is personal data, but it is exactly what an email service must have to do the job. You choose one and note the daily limit in your instruction file.</p>
+<p><strong>Rule of thumb:</strong> before the agent connects a service, ask it to answer the five questions in plain English.</p>
+</section>
+<section id="how-a-call-works-the-key-stays-on-your-server" class="level2">
+<h2 class="anchored" data-anchor-id="how-a-call-works-the-key-stays-on-your-server">How a call works: the key stays on your server</h2>
+<p><strong>Any request that carries a secret key goes from your server, never from the browser.</strong></p>
+<p>Session 2 gave the rule about secret keys. If a key reaches the browser, any user can read it with developer tools and use your account. For an email service, that means sending mail in your name, on your bill. So the browser never talks to the email service. It asks your server, and your server makes the call.</p>
+<p>A hotel front desk works the same way. A guest asks the desk to book a car to the airport. The desk books it on the hotel’s own account, and the guest never sees the account number.</p>
+<p><strong>Worked example.</strong> The owner clicks “Send shipping notice” on order 2042.</p>
+<ol type="1">
+<li>The browser asks your server: “Send the notice for order 2042.”</li>
+<li>Your server checks the request. Is this user staff? Does order 2042 exist? Has the notice already been sent?</li>
+<li>Your server sends a request to the email service, with your key and the order details.</li>
+<li>The email service sends the message and replies to your server.</li>
+<li>Your server records in the database that the notice was sent, and when.</li>
+<li>Your server tells the browser, which shows “Notice sent to J. Park at 2:14 p.m.”</li>
+</ol>
+<p>The secret key appears in exactly one message: the one between your server and the email service.</p>
+<p>You can see this for yourself. Ask the agent, “Show me the request you send to the email service and the reply you get, with the key hidden.” The request is usually written in a plain-text format called <strong>JSON</strong>: labels and values inside curly braces, such as <code>{ "order_number": 2042, "customer": "J. Park" }</code>. You can read it without training.</p>
+<p>Earlier sessions apply here too.</p>
+<ul>
+<li><strong>Session 1.</strong> Sending an email is a group 3 action. It cannot be recalled. A notice sent to the wrong customer is in their inbox, along with someone else’s order.</li>
+<li><strong>Session 4.</strong> The Send button changes data. It must show that it is working and refuse a second click.</li>
+<li><strong>Session 8.</strong> Your computer and your previews must not email real customers. In those environments, the app sends only to your own address.</li>
+</ul>
+<p><strong>Rule of thumb:</strong> for any outside connection, be able to say which message carries the key, and confirm that the browser is not in it.</p>
+</section>
+<section id="when-a-connection-fails" class="level2">
+<h2 class="anchored" data-anchor-id="when-a-connection-fails">When a connection fails</h2>
+<p><strong>A request crosses the internet to a computer you do not control, so a good app expects failure and tells the user what happened.</strong></p>
+<p>Every reply from a service carries a status code, the number you met in session 5. The agent reads the code. Your job is to decide what the user sees for each kind of failure.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>What went wrong</th>
+<th>What the user should see</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Something the user entered was missing or wrong</td>
+<td>What to fix</td>
+</tr>
+<tr class="even">
+<td>The app’s key is wrong or expired</td>
+<td>“Something went wrong on our end,” and a message to the owner</td>
+</tr>
+<tr class="odd">
+<td>The app sent too many requests too fast, past the rate limit</td>
+<td>“Busy. Try again in a moment.”</td>
+</tr>
+<tr class="even">
+<td>The service is down</td>
+<td>“Something went wrong on our end. Try again later.”</td>
+</tr>
+<tr class="odd">
+<td>No reply at all, before a time limit runs out</td>
+<td>“We are not sure this went through. Please check before trying again.”</td>
+</tr>
+</tbody>
+</table>
+<p>That time limit is called a <strong>timeout</strong>. A spinner that never stops is usually a request that is still waiting for one.</p>
+<p>Shipping has the same list under other names. A delivery can be refused or sent to an address that does not exist. It can be held because the carrier is overloaded, or lost with no scan at all. A carrier reports each one differently, because each needs a different response.</p>
+<section id="what-agents-leave-out" class="level3">
+<h3 class="anchored" data-anchor-id="what-agents-leave-out">What agents leave out</h3>
+<p>An agent builds the happy path first, as you learned in session 4. For a connection, that means it often makes the call and assumes it worked. Then a failed send looks exactly like a successful one. The owner sees “Sent,” and the customer never gets the notice.</p>
+<p><strong>Worked example.</strong> You test the Send button by turning off your Wi-Fi and clicking it. The screen says “Notice sent to J. Park.” Nothing was sent. The app never checked the reply.</p>
+<p>You ask the agent to handle every case in the table. For each one, the app should show a clear message and log the attempt, as in sessions 5 and 8. When the service clearly refused, the order stays marked as not sent.</p>
+<p>A timeout is different. The email service may have sent the message before its reply was lost. Marking it “not sent” invites a second click, and the customer gets the notice twice. Session 6 taught you that an empty value is not zero. In the same way, no reply is not a failure. Mark the notice “send status unknown,” and have someone check before resending.</p>
+<p><strong>Rule of thumb:</strong> for every connection, ask what the user sees when it fails. If the answer is “nothing,” or “the same as success,” it is not finished.</p>
+</section>
+</section>
+<section id="your-agents-connections-mcp" class="level2">
+<h2 class="anchored" data-anchor-id="your-agents-connections-mcp">Your agent’s connections: MCP</h2>
+<p><strong>Your app’s connections run for your users. Your agent’s connections help you while you build, and they need rules too.</strong></p>
+<p>So far this reading has been about your product. It calls the email service whenever the owner clicks Send, long after you have stopped building.</p>
+<p>Your agent can also reach outside tools, but only while it works with you. Out of the box, it can use your project’s files, your computer’s commands and the web. Your other tools, such as GitHub, your database or a shared spreadsheet, are out of its reach until you connect them.</p>
+<p><strong>MCP</strong>, short for Model Context Protocol, is an open standard for connecting an AI agent to other tools and data. A tool that supports it offers an <strong>MCP server</strong>, a small program that lets the agent use that tool’s actions. The Claude apps call an MCP connection a <strong>connector</strong>.</p>
+<p>The shipping container did this for freight. Before it, every port loaded every cargo differently. One standard box meant any ship, crane or truck could handle any shipper’s goods. MCP is one standard plug, so any agent can use any tool that offers it.</p>
+<section id="when-to-connect-your-agent" class="level3">
+<h3 class="anchored" data-anchor-id="when-to-connect-your-agent">When to connect your agent</h3>
+<p>The best sign that you need a connector: you keep copying information from another tool and pasting it into the chat. Connect the tool, and the agent reads it directly.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Connect your agent to</th>
+<th>Then you can say</th>
+<th>Why it helps</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GitHub</td>
+<td>“List my open pull requests and explain each one in plain English.”</td>
+<td>You review changes without leaving the conversation (session 3)</td>
+</tr>
+<tr class="even">
+<td>Your database, read-only</td>
+<td>“How many orders shipped late last week? Show me the rows.”</td>
+<td>You check the dashboard against the data (session 6)</td>
+</tr>
+<tr class="odd">
+<td>A browser</td>
+<td>“Open my app, send the notice for order 2042 to the test address, and tell me what the screen shows.”</td>
+<td>The agent checks its own work in the running app (session 5)</td>
+</tr>
+<tr class="even">
+<td>A spreadsheet or shared drive</td>
+<td>“Read the new flavor list in this spreadsheet and add the flavors as products.”</td>
+<td>Business data often starts in a spreadsheet</td>
+</tr>
+<tr class="odd">
+<td>A project tracker, such as Asana or Notion</td>
+<td>“Read the feature requests on our board and plan the top one in plan mode.”</td>
+<td>Your to-do list and your agent stay in step</td>
+</tr>
+</tbody>
+</table>
+<p>In the desktop app, click <strong>+</strong> next to the message box and choose <strong>Add connectors</strong>, or <strong>Connectors</strong> and then <strong>Browse connectors</strong>. To see or disconnect your connectors, click <strong>Customize</strong> in the sidebar and open <strong>Connectors</strong>. Some services also offer a command-line tool that the agent can run instead. The agent will often suggest one.</p>
+</section>
+<section id="what-a-connection-costs" class="level3">
+<h3 class="anchored" data-anchor-id="what-a-connection-costs">What a connection costs</h3>
+<p>Session 1’s second question applies: what may it do? A connection widens the blast radius of every instruction you give.</p>
+<ul>
+<li><strong>Changes that cannot be rewound.</strong> An agent connected to your database can change real rows. Rewinding to a checkpoint restores your files, not your data. Connect a database read-only unless you mean otherwise.</li>
+<li><strong>Context.</strong> Every connected server adds its list of actions to the agent’s context in every conversation. Session 1 taught you that context is finite. Disconnect what you are not using.</li>
+<li><strong>Trust.</strong> A connection that brings in outside content can bring in text that tries to steer the agent. A web page, an email or a document can hide instructions written for an AI. This is called <strong>prompt injection</strong>. Connect only tools you trust, and stop the agent if it starts doing things unrelated to your task. Session 10 returns to this risk.</li>
+</ul>
+<p><strong>Rule of thumb:</strong> treat each connector like a new contractor with keys to your office. Know what it can reach, and give it the least access that does the job.</p>
+</section>
+</section>
+<section id="key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="key-terms">Key terms</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Plain-English meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>API</td>
+<td>The list of requests a system agrees to answer</td>
+</tr>
+<tr class="even">
+<td>Documentation</td>
+<td>The published description of an API: what each request needs and what comes back</td>
+</tr>
+<tr class="odd">
+<td>API key</td>
+<td>A secret string a service gives your account, which says whose account is calling</td>
+</tr>
+<tr class="even">
+<td>Free tier</td>
+<td>An amount of use a service gives each month at no charge</td>
+</tr>
+<tr class="odd">
+<td>Rate limit</td>
+<td>A cap on how many requests you may send in a period of time</td>
+</tr>
+<tr class="even">
+<td>JSON</td>
+<td>A plain-text format for data: labels and values inside curly braces</td>
+</tr>
+<tr class="odd">
+<td>Timeout</td>
+<td>A time limit for waiting on a reply. After it, you stop waiting, but the request may or may not have worked.</td>
+</tr>
+<tr class="even">
+<td>MCP</td>
+<td>Model Context Protocol, an open standard for connecting an AI agent to other tools and data</td>
+</tr>
+<tr class="odd">
+<td>MCP server</td>
+<td>A small program that lets the agent use one tool’s actions</td>
+</tr>
+<tr class="even">
+<td>Connector</td>
+<td>The Claude apps’ name for an MCP connection</td>
+</tr>
+<tr class="odd">
+<td>Prompt injection</td>
+<td>Text in a page, email or document written to make an AI do something its user did not ask for</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/week-08-deployment.html" class="pagination-link" aria-label="Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/week-10-ai-in-your-app.html" class="pagination-link" aria-label="AI in Your App: Models and What They Cost — Vibe Programming, Session 10">
+        <span class="nav-page-text"><span class="chapter-title">AI in Your App: Models and What They Cost — Vibe Programming, Session 10</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

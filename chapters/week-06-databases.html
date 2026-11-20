@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Databases: Where the Data Lives — Vibe Programming, Session 6 – Vibe Programming</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/week-07-logins-and-security.html" rel="next">
+<link href="../chapters/week-05-testing.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8575377b15774f46c10fa1d7752ca172.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<meta name="robots" content="noindex, nofollow">
+<script>
+  window.hypothesisConfig = function () {
+    return { groupsAllowlist: ["zJ3jnJaK"] };
+  };
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/week-06-databases.html"><span class="chapter-title">Databases: Where the Data Lives — Vibe Programming, Session 6</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Vibe Programming</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About these readings</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-00-build-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Build and Publish Your App — Vibe Programming, Session 0</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-01-directing-the-agent.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-02-architecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-03-github.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">GitHub: Save Points, Review and the Human in the Loop — Vibe Programming, Session 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-04-user-experience.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">User Experience: Screens People Can Actually Use — Vibe Programming, Session 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-05-testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Testing: How Do You Know It Works? — Vibe Programming, Session 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-06-databases.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Databases: Where the Data Lives — Vibe Programming, Session 6</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-07-logins-and-security.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logins and Security: Who May Do What — Vibe Programming, Session 7</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-08-deployment.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-09-apis-and-mcp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-10-ai-in-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">AI in Your App: Models and What They Cost — Vibe Programming, Session 10</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning objectives</a></li>
+  <li><a href="#the-big-idea-a-prototype-forgets-a-product-remembers" id="toc-the-big-idea-a-prototype-forgets-a-product-remembers" class="nav-link" data-scroll-target="#the-big-idea-a-prototype-forgets-a-product-remembers">The big idea: a prototype forgets, a product remembers</a></li>
+  <li><a href="#tables-rows-columns-and-keys" id="toc-tables-rows-columns-and-keys" class="nav-link" data-scroll-target="#tables-rows-columns-and-keys">Tables, rows, columns and keys</a></li>
+  <li><a href="#three-kinds-of-database" id="toc-three-kinds-of-database" class="nav-link" data-scroll-target="#three-kinds-of-database">Three kinds of database</a></li>
+  <li><a href="#from-a-sentence-to-a-set-of-tables" id="toc-from-a-sentence-to-a-set-of-tables" class="nav-link" data-scroll-target="#from-a-sentence-to-a-set-of-tables">From a sentence to a set of tables</a></li>
+  <li><a href="#rules-live-in-the-database-and-changes-are-written-down" id="toc-rules-live-in-the-database-and-changes-are-written-down" class="nav-link" data-scroll-target="#rules-live-in-the-database-and-changes-are-written-down">Rules live in the database, and changes are written down</a>
+  <ul class="collapse">
+  <li><a href="#rules-that-hold-everywhere" id="toc-rules-that-hold-everywhere" class="nav-link" data-scroll-target="#rules-that-hold-everywhere">Rules that hold everywhere</a></li>
+  <li><a href="#why-the-design-is-hard-to-change" id="toc-why-the-design-is-hard-to-change" class="nav-link" data-scroll-target="#why-the-design-is-hard-to-change">Why the design is hard to change</a></li>
+  <li><a href="#migrations" id="toc-migrations" class="nav-link" data-scroll-target="#migrations">Migrations</a></li>
+  </ul></li>
+  <li><a href="#asking-the-database-a-question" id="toc-asking-the-database-a-question" class="nav-link" data-scroll-target="#asking-the-database-a-question">Asking the database a question</a>
+  <ul class="collapse">
+  <li><a href="#a-query-that-answers-the-wrong-question" id="toc-a-query-that-answers-the-wrong-question" class="nav-link" data-scroll-target="#a-query-that-answers-the-wrong-question">A query that answers the wrong question</a></li>
+  <li><a href="#why-a-screen-gets-slow" id="toc-why-a-screen-gets-slow" class="nav-link" data-scroll-target="#why-a-screen-gets-slow">Why a screen gets slow</a></li>
+  </ul></li>
+  <li><a href="#changing-data-and-protecting-it" id="toc-changing-data-and-protecting-it" class="nav-link" data-scroll-target="#changing-data-and-protecting-it">Changing data, and protecting it</a></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms">Key terms</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Databases: Where the Data Lives — Vibe Programming, Session 6</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Adapted and simplified from the first half of Scott Murff’s chapter <a href="https://byu-strategy.github.io/product-management/08-data-and-apis.html">Data and APIs</a>, in his textbook Intro to Product Management. The ideas are his. The wording and the business examples were written for these readings.</em></p>
+<p>Reading time: about 20 minutes. Class opens with a short quiz on this reading.</p>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning objectives</h2>
+<p>By the end of this session you can:</p>
+<ol type="1">
+<li>Name the building blocks of a database (tables, rows, columns and keys) and the three kinds of database.</li>
+<li>Turn a one-sentence description of a feature into a set of tables.</li>
+<li>Name the kinds of rule a database can enforce, and explain why a change to the design needs a migration.</li>
+<li>Predict which rows a described query will return, and spot a query that answers the wrong question.</li>
+<li>Explain why an update or a delete is dangerous, and how to protect real data.</li>
+</ol>
+</section>
+<section id="the-big-idea-a-prototype-forgets-a-product-remembers" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-a-prototype-forgets-a-product-remembers">The big idea: a prototype forgets, a product remembers</h2>
+<p>In session 2 you learned that an app has three places, and that the database is where it keeps what it must remember. In session 5 you ran the reload test and saw the difference. Data in page memory is gone on reload. Data in the database stays.</p>
+<p>A <strong>database</strong> stores an app’s data as tables, and keeps it until someone deletes it. Everything on your screens is a view of what the database holds. The example shop’s sales dashboard is not stored anywhere as a dashboard. It is calculated from rows of orders, every time someone opens it.</p>
+<p>Most apps have a database, because most apps must remember things between visits. A few do not. A unit converter or a simple game can forget everything when it closes. Even a simple game may want to remember the high scores, though, and then it needs somewhere to keep them.</p>
+<p>Here is the main point of the session: <strong>the design of your data is the skeleton of your app. Every screen depends on it, and it is the hardest thing to change later.</strong></p>
+<p>You will not write database code. You will decide what the business needs to remember and check that the agent’s design matches the business. You will also catch a question that was answered wrongly.</p>
+<p>This session the example shop adds a new part: stock kept at two locations. One is the freezer at the shop’s production kitchen, where the ice cream is made and the cookies are baked. The other is the freezer case and cookie shelf at the shop’s <strong>storefront</strong>, the shop on campus where customers walk in and buy. Until now the app counted all stock as one number. You will add a new kind of record to your own app as well.</p>
+</section>
+<section id="tables-rows-columns-and-keys" class="level2">
+<h2 class="anchored" data-anchor-id="tables-rows-columns-and-keys">Tables, rows, columns and keys</h2>
+<p><strong>A database is a set of tables, and keys are how the tables refer to each other.</strong></p>
+<p>There are five building blocks.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Block</th>
+<th>What it is</th>
+<th>In the example shop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Table</strong></td>
+<td>One kind of thing the business keeps track of</td>
+<td>Customers</td>
+</tr>
+<tr class="even">
+<td><strong>Row</strong></td>
+<td>One instance of that thing</td>
+<td>J. Park</td>
+</tr>
+<tr class="odd">
+<td><strong>Column</strong></td>
+<td>One fact recorded about every row</td>
+<td>City</td>
+</tr>
+<tr class="even">
+<td><strong>Primary key</strong></td>
+<td>A column whose value is unique to each row, so the row can be pointed at</td>
+<td>Customer ID</td>
+</tr>
+<tr class="odd">
+<td><strong>Foreign key</strong></td>
+<td>A column that holds the primary key of a row in another table</td>
+<td>The customer ID on an order</td>
+</tr>
+</tbody>
+</table>
+<p>You already know this structure from a class roster. Each student is one row. Each fact about a student is a column. Your student ID number is a primary key: no two students share it, so it points to exactly one person.</p>
+<p>Here are two of the shop’s tables.</p>
+<p><strong>Customers</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Customer ID</th>
+<th>Name</th>
+<th>City</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>R. Alvarez</td>
+<td>Denver</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>J. Park</td>
+<td>Austin</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>M. Osei</td>
+<td>Boise</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Orders</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Order number</th>
+<th>Customer ID</th>
+<th>Product ID</th>
+<th>Quantity</th>
+<th>Promised</th>
+<th>Shipped</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2038</td>
+<td>2</td>
+<td>14</td>
+<td>2</td>
+<td>Feb 10</td>
+<td>Feb 14</td>
+<td>Shipped</td>
+</tr>
+<tr class="even">
+<td>2039</td>
+<td>1</td>
+<td>11</td>
+<td>3</td>
+<td>Feb 12</td>
+<td>Feb 12</td>
+<td>Shipped</td>
+</tr>
+<tr class="odd">
+<td>2040</td>
+<td>2</td>
+<td>14</td>
+<td>1</td>
+<td>Feb 20</td>
+<td>Feb 19</td>
+<td>Shipped</td>
+</tr>
+<tr class="even">
+<td>2041</td>
+<td>1</td>
+<td>11</td>
+<td>3</td>
+<td>Mar 3</td>
+<td>Mar 3</td>
+<td>Shipped</td>
+</tr>
+<tr class="odd">
+<td>2042</td>
+<td>2</td>
+<td>20</td>
+<td>1</td>
+<td>Mar 10</td>
+<td>(empty)</td>
+<td>Open</td>
+</tr>
+<tr class="even">
+<td>2043</td>
+<td>3</td>
+<td>14</td>
+<td>4</td>
+<td>Mar 12</td>
+<td>Mar 15</td>
+<td>Shipped</td>
+</tr>
+</tbody>
+</table>
+<p>Look at the Customer ID column in the orders table. That is a foreign key. Order 2038 does not repeat “J. Park” and the customer’s city. It holds the number 2, which points to J. Park’s row. If J. Park moves, you change one row in one table. The Product ID column works the same way, pointing into a table of products.</p>
+<p>A table looks like a spreadsheet, and that is a fair first picture. It breaks in two places.</p>
+<ul>
+<li><strong>A database enforces rules on every entry.</strong> A spreadsheet lets you type “seven” into a number column. A database refuses.</li>
+<li><strong>Most of a database’s usefulness comes from the links between tables.</strong> A spreadsheet does not have them.</li>
+</ul>
+<p><strong>Rule of thumb:</strong> record each fact in one place, and point to it from everywhere else.</p>
+</section>
+<section id="three-kinds-of-database" class="level2">
+<h2 class="anchored" data-anchor-id="three-kinds-of-database">Three kinds of database</h2>
+<p><strong>Databases differ in where they run and who looks after them. The right kind depends on how many people use the app at once.</strong></p>
+<p>All three kinds below store tables, rows and keys in the same way. They differ in where the data sits and who keeps it running.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Kind</th>
+<th>Examples</th>
+<th>Where the data sits</th>
+<th>When it fits</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Single-file database</strong></td>
+<td>SQLite</td>
+<td>One file, next to the app</td>
+<td>Learning, quick prototypes, and apps used by one person on one device, such as many phone apps</td>
+</tr>
+<tr class="even">
+<td><strong>Database server</strong></td>
+<td>PostgreSQL, MySQL</td>
+<td>A program on a server that answers the app’s requests</td>
+<td>Apps with many users at once, when someone on the team can keep it running, backed up and updated</td>
+</tr>
+<tr class="odd">
+<td><strong>Hosted database</strong></td>
+<td>Supabase</td>
+<td>A database server that a company runs for you</td>
+<td>Small teams that want a real database without running one. Supabase runs PostgreSQL.</td>
+</tr>
+</tbody>
+</table>
+<p>A single file is simple, but it is hard to share. Many hosting companies also do not keep the files an app writes, so a single-file database on them can lose its data. A database server handles many users, but someone has to look after it. A hosted database gives you the server without the upkeep, and you pay with a monthly bill and less control.</p>
+<p>A company makes the same choice about payroll. A very small business can run payroll from one spreadsheet. A large one may run its own payroll department. Many choose a payroll service that does the work for a fee.</p>
+<p>The example shop uses a hosted database, like most apps in this course. Ask the agent which kind your app uses, and where its data is kept.</p>
+<p><strong>Rule of thumb:</strong> if several people will use your app from different devices, use a database server or a hosted one, not a single file.</p>
+</section>
+<section id="from-a-sentence-to-a-set-of-tables" class="level2">
+<h2 class="anchored" data-anchor-id="from-a-sentence-to-a-set-of-tables">From a sentence to a set of tables</h2>
+<p><strong>The tables are the nouns of the business. For each pair, ask how many of one go with one of the other.</strong></p>
+<p>The whole design of tables and their links is called the <strong>schema</strong>. You can draft one from a sentence.</p>
+<p>Start with a description of what the business needs. Underline the nouns. Then take the nouns two at a time and ask how many of one go with one of the other.</p>
+<p><strong>Worked example.</strong> This session the shop adds stock by location. The description is: “The shop keeps a quantity of each product at each of its locations.”</p>
+<p>The nouns are products, locations and quantities. You already have a table of products. Now ask the question about products and locations.</p>
+<ul>
+<li>One product can be held at many locations.</li>
+<li>One location holds many products.</li>
+</ul>
+<p>That is many on both sides. When that happens, you need a third table with one row for each pairing. Call it stock.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Table</th>
+<th>Columns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Products</td>
+<td>Product ID, name, price</td>
+</tr>
+<tr class="even">
+<td>Locations</td>
+<td>Location ID, name</td>
+</tr>
+<tr class="odd">
+<td>Stock</td>
+<td>Product ID, location ID, quantity on hand</td>
+</tr>
+</tbody>
+</table>
+<p>A row in the stock table says, “product 14, at location 2, quantity 60.” The product ID and location ID are both foreign keys.</p>
+<p>Compare that with customers and orders. One customer has many orders, but each order has one customer. That is many on one side only, so no third table is needed. The table on the “many” side, orders, holds the foreign key.</p>
+<p>Test yourself on one more pair. In a real shop, one order often holds several products, and each product appears on many orders. That is many on both sides again, so it needs a third table, just like stock: order lines, with one row for each product on each order.</p>
+<p>The new tables also connect to what you already have. When the owner ships an order, the quantity on hand at one location should go down. So the shipping step now has to ask which location the package left from. A change to the data often reaches back into a flow you thought was finished.</p>
+<p>You can check the agent’s design the same way. Ask it to list every table, its columns and its links, in plain English. Then read the list against the business. Is there a noun the business uses that has no table? Is a fact stored in two places?</p>
+<p><strong>Rule of thumb:</strong> before the agent builds, write the sentence, underline the nouns, and ask “how many” of each pair.</p>
+</section>
+<section id="rules-live-in-the-database-and-changes-are-written-down" class="level2">
+<h2 class="anchored" data-anchor-id="rules-live-in-the-database-and-changes-are-written-down">Rules live in the database, and changes are written down</h2>
+<p><strong>The database can refuse bad data no matter which screen sent it, and its design should change only through a written, reviewable step.</strong></p>
+<section id="rules-that-hold-everywhere" class="level3">
+<h3 class="anchored" data-anchor-id="rules-that-hold-everywhere">Rules that hold everywhere</h3>
+<p>Session 2 taught you that a check in the browser can be skipped. The database is the last line, and it can enforce rules of its own.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Kind of rule</th>
+<th>Example in the shop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Type</td>
+<td>Quantity must be a whole number</td>
+</tr>
+<tr class="even">
+<td>Required</td>
+<td>An order must have a customer</td>
+</tr>
+<tr class="odd">
+<td>Allowed values</td>
+<td>Status must be Open, Shipped or Cancelled</td>
+</tr>
+<tr class="even">
+<td>Range</td>
+<td>Quantity on hand cannot be negative</td>
+</tr>
+<tr class="odd">
+<td>Link</td>
+<td>An order’s customer ID must match a real customer</td>
+</tr>
+<tr class="even">
+<td>Unique</td>
+<td>No two customers can share an email address</td>
+</tr>
+</tbody>
+</table>
+<p>A rule in the database rejects a bad value from any screen, any script and any agent. It cannot be skipped by someone with developer tools.</p>
+</section>
+<section id="why-the-design-is-hard-to-change" class="level3">
+<h3 class="anchored" data-anchor-id="why-the-design-is-hard-to-change">Why the design is hard to change</h3>
+<p>Once real rows sit in a table, every screen, calculation and report depends on its shape.</p>
+<p>Suppose you stored each customer’s name as one column. Later you want first and last names separately. You must rewrite every existing row and every part of the app that reads it. For a customer entered as “Front Desk, Hotel Aria,” someone has to guess.</p>
+<p>A store has the same problem. Changing the floor plan on paper takes an afternoon. Changing it in an open store means moving every shelf and every product. Code can be rewritten quickly. Data has to be moved.</p>
+</section>
+<section id="migrations" class="level3">
+<h3 class="anchored" data-anchor-id="migrations">Migrations</h3>
+<p>A <strong>migration</strong> is a small file that makes one change to the schema, such as “add a locations table.” Migrations are saved in your project and applied in order.</p>
+<p>The alternative is to click around in the database’s own website and add a column by hand. Do not do that, and do not let the agent do it. A migration has three advantages over a click.</p>
+<ul>
+<li><strong>It can be reviewed.</strong> It appears in a pull request, like any other change from session 3.</li>
+<li><strong>It can be repeated.</strong> A fresh database can be built by applying the migrations in order.</li>
+<li><strong>It is recorded.</strong> Your project’s history shows when the design changed, and why.</li>
+</ul>
+<p><strong>Rule of thumb:</strong> treat a change to the schema as a group 3 action. Have the agent plan it, read the plan, and review the migration before it runs.</p>
+</section>
+</section>
+<section id="asking-the-database-a-question" class="level2">
+<h2 class="anchored" data-anchor-id="asking-the-database-a-question">Asking the database a question</h2>
+<p><strong>Every question to a database is built from the same few blocks, and your job is to predict which rows come back.</strong></p>
+<p>A <strong>query</strong> is a question put to the database. You do not need to write one. You need to tell when the agent’s query answers a different question from the one you asked.</p>
+<p>A query is assembled from six blocks.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Block</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Choose the table</td>
+<td>Where to look</td>
+</tr>
+<tr class="even">
+<td>Filter</td>
+<td>Keep only the rows that pass a test</td>
+</tr>
+<tr class="odd">
+<td>Choose columns</td>
+<td>Which facts to return</td>
+</tr>
+<tr class="even">
+<td>Sort</td>
+<td>Put the rows in order</td>
+</tr>
+<tr class="odd">
+<td>Limit</td>
+<td>Keep only the first few rows after sorting</td>
+</tr>
+<tr class="even">
+<td>Join</td>
+<td>Pair each row with its matching rows in another table</td>
+</tr>
+</tbody>
+</table>
+<p>A shopping list for a busy errand is built the same way. It names the store, the items to get, the details that matter and the order to walk the aisles.</p>
+<p><strong>Worked example.</strong> Using the tables above, you ask: “Show the order number and quantity for J. Park’s orders that shipped late, newest first.”</p>
+<ol type="1">
+<li><strong>Table:</strong> orders.</li>
+<li><strong>Filter:</strong> customer ID is 2, and the shipped date is after the promised date. Order 2038 passes. Order 2040 shipped a day early. Order 2042 has no shipped date, so it is not “after” anything.</li>
+<li><strong>Columns:</strong> order number and quantity.</li>
+<li><strong>Sort:</strong> newest first.</li>
+</ol>
+<p>The answer is one row: order 2038, quantity 2.</p>
+<p>Three things about queries surprise people.</p>
+<p><strong>An empty answer is not an error.</strong> Ask for R. Alvarez’s late orders and you get no rows. That is a correct answer. It also means a broken filter can look exactly like “nothing to report.”</p>
+<p><strong>An empty value is not zero.</strong> Order 2042 has no shipped date. It is not late, and it is not on time. A query has to say what to do with it. This is the same edge case you met in session 1.</p>
+<p><strong>A join drops rows that have no match.</strong> Suppose a report pairs each customer with their orders. A customer who signed up yesterday has none. Unless the query is told to keep that customer, they vanish from the list.</p>
+<section id="a-query-that-answers-the-wrong-question" class="level3">
+<h3 class="anchored" data-anchor-id="a-query-that-answers-the-wrong-question">A query that answers the wrong question</h3>
+<p><strong>Worked example.</strong> You ask for “each customer’s most recent order.” The agent sorts all orders by date and keeps the first one. The result is a single row: order 2043 from M. Osei.</p>
+<p>The query ran without error. It answered “the most recent order overall.” You asked for one row per customer, which is three rows.</p>
+<p>You catch this by predicting before you look, as in session 1. Three customers have orders, so you expect three rows. One row means the question was misread.</p>
+</section>
+<section id="why-a-screen-gets-slow" class="level3">
+<h3 class="anchored" data-anchor-id="why-a-screen-gets-slow">Why a screen gets slow</h3>
+<p>To find J. Park’s orders, the database can read every row in the table. Or it can use an <strong>index</strong>: a sorted lookup list it keeps on one column, like the index at the back of a book. An index lets it jump straight to the matching rows.</p>
+<p>With a few hundred rows you will never notice the difference. If a screen slows down as your data grows, a missing index is the first thing to ask the agent about.</p>
+<p><strong>Rule of thumb:</strong> before you read a report, predict how many rows it should have.</p>
+</section>
+</section>
+<section id="changing-data-and-protecting-it" class="level2">
+<h2 class="anchored" data-anchor-id="changing-data-and-protecting-it">Changing data, and protecting it</h2>
+<p><strong>An update or a delete uses a filter to pick its rows, and a missing filter changes or erases every row in the table.</strong></p>
+<p>A database has four basic operations: create a row, read rows, update rows and delete rows.</p>
+<p>The first two are low risk. The last two use the same filter block as a query. “Delete the orders where the status is Cancelled” removes a few rows. Leave off the filter, and the same instruction removes every order you have. There is no trash folder.</p>
+<p>Four habits protect your data.</p>
+<p><strong>Mark, do not delete.</strong> In session 2 you told the agent to store the status Cancelled and never delete the row. Accounting works the same way. A ledger entry is never erased. A correcting entry is posted, with a reason. The shop’s dashboard is calculated from history, so the history has to stay. Marking protects a row from being erased. It does not record who changed a value, or when. That record, called an <strong>audit trail</strong>, needs the app to know who is acting. Session 7 adds logins.</p>
+<p><strong>Make two-table changes all or nothing.</strong> Shipping an order changes two tables. The order becomes Shipped, and the stock at one location goes down. If one change saves and the other fails, the data disagrees with itself. A database can group several changes into one <strong>transaction</strong>, so that they all happen or none do. When one action changes two tables, ask the agent to make it all or nothing. The range rule above also covers two customers buying the last pint at the same moment. The stock cannot go below zero, so the database refuses the second sale.</p>
+<p><strong>Back up before a change that alters or removes data.</strong> Session 3 taught you that reverting a change restores the files but not the rows. A backup is the only way back.</p>
+<p><strong>Do not build against real data.</strong> On the first day, your computer copy and your live app can share one database, because there is nothing to lose. Once real people use the app, that changes. Every unfinished feature you try, and every action the agent takes, would act on their data. From then on you build against a separate copy that you can wipe and refill.</p>
+<p>That copy is filled with <strong>seed data</strong>: made-up rows that give the app something to show. Good seed data varies the way real data does. If every product in your seed data sells at the same steady pace, the dashboard will look perfect and tell you nothing.</p>
+<p>You can also look at the data directly. The service that runs your database has a screen that shows each table and its rows. Use it to look, the way a store manager walks the aisles to check a count. Do not use it to edit.</p>
+<p><strong>Rule of thumb:</strong> before any update or delete, ask the agent how many rows it will touch.</p>
+</section>
+<section id="key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="key-terms">Key terms</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Plain-English meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Database</td>
+<td>Where an app stores its data as tables, until someone deletes it</td>
+</tr>
+<tr class="even">
+<td>Single-file database</td>
+<td>A database kept as one file next to the app, such as SQLite</td>
+</tr>
+<tr class="odd">
+<td>Database server</td>
+<td>A program on a server that holds the data and answers the app’s requests, such as PostgreSQL or MySQL</td>
+</tr>
+<tr class="even">
+<td>Hosted database</td>
+<td>A database server that a company runs for you, such as Supabase</td>
+</tr>
+<tr class="odd">
+<td>Table</td>
+<td>One kind of thing the business keeps track of</td>
+</tr>
+<tr class="even">
+<td>Row</td>
+<td>One instance of that thing</td>
+</tr>
+<tr class="odd">
+<td>Column</td>
+<td>One fact recorded about every row</td>
+</tr>
+<tr class="even">
+<td>Primary key</td>
+<td>A column whose value is unique to each row, so the row can be pointed at</td>
+</tr>
+<tr class="odd">
+<td>Foreign key</td>
+<td>A column that holds the primary key of a row in another table</td>
+</tr>
+<tr class="even">
+<td>Schema</td>
+<td>The whole design of the tables and their links</td>
+</tr>
+<tr class="odd">
+<td>Migration</td>
+<td>A small file that makes one change to the schema, saved in the project and applied in order</td>
+</tr>
+<tr class="even">
+<td>Query</td>
+<td>A question put to the database</td>
+</tr>
+<tr class="odd">
+<td>Filter</td>
+<td>The part of a query that keeps only the rows that pass a test</td>
+</tr>
+<tr class="even">
+<td>Join</td>
+<td>The part of a query that pairs each row with its matching rows in another table</td>
+</tr>
+<tr class="odd">
+<td>Index</td>
+<td>A sorted lookup list on one column that lets the database find matching rows quickly</td>
+</tr>
+<tr class="even">
+<td>Audit trail</td>
+<td>A record of who changed what, and when</td>
+</tr>
+<tr class="odd">
+<td>Transaction</td>
+<td>A group of changes that the database makes all together or not at all</td>
+</tr>
+<tr class="even">
+<td>Seed data</td>
+<td>Made-up rows that give the app something to show while you build</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/week-05-testing.html" class="pagination-link" aria-label="Testing: How Do You Know It Works? — Vibe Programming, Session 5">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Testing: How Do You Know It Works? — Vibe Programming, Session 5</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/week-07-logins-and-security.html" class="pagination-link" aria-label="Logins and Security: Who May Do What — Vibe Programming, Session 7">
+        <span class="nav-page-text"><span class="chapter-title">Logins and Security: Who May Do What — Vibe Programming, Session 7</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

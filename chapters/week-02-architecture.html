@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Architecture: The Pieces and How They Fit — Vibe Programming, Session 2 – Vibe Programming</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/week-03-github.html" rel="next">
+<link href="../chapters/week-01-directing-the-agent.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8575377b15774f46c10fa1d7752ca172.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<meta name="robots" content="noindex, nofollow">
+<script>
+  window.hypothesisConfig = function () {
+    return { groupsAllowlist: ["zJ3jnJaK"] };
+  };
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/week-02-architecture.html"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Vibe Programming</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About these readings</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-00-build-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Build and Publish Your App — Vibe Programming, Session 0</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-01-directing-the-agent.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-02-architecture.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-03-github.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">GitHub: Save Points, Review and the Human in the Loop — Vibe Programming, Session 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-04-user-experience.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">User Experience: Screens People Can Actually Use — Vibe Programming, Session 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-05-testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Testing: How Do You Know It Works? — Vibe Programming, Session 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-06-databases.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Databases: Where the Data Lives — Vibe Programming, Session 6</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-07-logins-and-security.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logins and Security: Who May Do What — Vibe Programming, Session 7</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-08-deployment.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-09-apis-and-mcp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-10-ai-in-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">AI in Your App: Models and What They Cost — Vibe Programming, Session 10</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning objectives</a></li>
+  <li><a href="#the-big-idea-three-places-and-the-messages-between-them" id="toc-the-big-idea-three-places-and-the-messages-between-them" class="nav-link" data-scroll-target="#the-big-idea-three-places-and-the-messages-between-them">The big idea: three places and the messages between them</a></li>
+  <li><a href="#three-places" id="toc-three-places" class="nav-link" data-scroll-target="#three-places">Three places</a></li>
+  <li><a href="#messages-connect-the-places" id="toc-messages-connect-the-places" class="nav-link" data-scroll-target="#messages-connect-the-places">Messages connect the places</a>
+  <ul class="collapse">
+  <li><a href="#use-the-trace-to-find-a-problem" id="toc-use-the-trace-to-find-a-problem" class="nav-link" data-scroll-target="#use-the-trace-to-find-a-problem">Use the trace to find a problem</a></li>
+  </ul></li>
+  <li><a href="#the-trust-line" id="toc-the-trust-line" class="nav-link" data-scroll-target="#the-trust-line">The trust line</a></li>
+  <li><a href="#secrets-stay-on-the-server" id="toc-secrets-stay-on-the-server" class="nav-link" data-scroll-target="#secrets-stay-on-the-server">Secrets stay on the server</a></li>
+  <li><a href="#who-runs-each-place-the-stack" id="toc-who-runs-each-place-the-stack" class="nav-link" data-scroll-target="#who-runs-each-place-the-stack">Who runs each place: the stack</a>
+  <ul class="collapse">
+  <li><a href="#you-speak-english-the-agent-writes-code" id="toc-you-speak-english-the-agent-writes-code" class="nav-link" data-scroll-target="#you-speak-english-the-agent-writes-code">You speak English; the agent writes code</a></li>
+  </ul></li>
+  <li><a href="#read-the-map-then-direct-by-place" id="toc-read-the-map-then-direct-by-place" class="nav-link" data-scroll-target="#read-the-map-then-direct-by-place">Read the map, then direct by place</a>
+  <ul class="collapse">
+  <li><a href="#reading-the-map" id="toc-reading-the-map" class="nav-link" data-scroll-target="#reading-the-map">Reading the map</a></li>
+  <li><a href="#directing-by-place" id="toc-directing-by-place" class="nav-link" data-scroll-target="#directing-by-place">Directing by place</a></li>
+  </ul></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms">Key terms</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Adapted and simplified from Scott Murff’s chapter <a href="https://byu-strategy.github.io/product-management/07-anatomy-of-an-application.html">Anatomy of an Application</a>, in his textbook Intro to Product Management. The ideas are his. The wording and the business examples were written for these readings.</em></p>
+<p>Reading time: about 20 minutes. Class opens with a short quiz on this reading.</p>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning objectives</h2>
+<p>By the end of this session you can:</p>
+<ol type="1">
+<li>Name the three places in an app and say who controls each one.</li>
+<li>Trace one action in your app, hop by hop, from a click to a stored record and back.</li>
+<li>Explain why a check that runs only in the browser can be skipped, and where it should run.</li>
+<li>Name the service that runs each part of your app, and say what a secret key is.</li>
+<li>Write a request to the agent that says what should happen in each place.</li>
+</ol>
+</section>
+<section id="the-big-idea-three-places-and-the-messages-between-them" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-three-places-and-the-messages-between-them">The big idea: three places and the messages between them</h2>
+<p>In session 1 you learned to direct the agent. You asked for changes to your app, and the agent decided where each piece went. It has been making those decisions since the intro session.</p>
+<p>This session you find out what it built. <strong>Architecture</strong> is the plan of an app: its main parts and how they connect.</p>
+<p>Here is the main point of the session: <strong>your app is three places connected by messages, and most serious problems come from something sitting in the wrong place.</strong></p>
+<p>You do not need to read code to use this idea. You need a map. Once you can say which place a rule or a piece of data belongs in, you can tell the agent where to put it. You can also catch the agent when it puts something in the wrong place.</p>
+</section>
+<section id="three-places" class="level2">
+<h2 class="anchored" data-anchor-id="three-places">Three places</h2>
+<p><strong>Every app is built from a browser, a server and a database, and a different party controls each one.</strong></p>
+<p>The <strong>browser</strong> is the program on the user’s device that shows your app, such as Chrome or Safari. Your app’s screens run inside it. The <strong>server</strong> is a computer you control that runs your app’s rules and keeps its secrets. The <strong>database</strong> is where the app stores what it must remember between visits.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Place</th>
+<th>Also called</th>
+<th>Who controls it</th>
+<th>What belongs there</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Browser</td>
+<td>Frontend, client</td>
+<td>The user</td>
+<td>Screens, buttons, forms and quick checks that save the user time</td>
+</tr>
+<tr class="even">
+<td>Server</td>
+<td>Backend</td>
+<td>You</td>
+<td>The rules of the business, secret keys and calls to paid services</td>
+</tr>
+<tr class="odd">
+<td>Database</td>
+<td>Storage</td>
+<td>You, through its rules</td>
+<td>Everything the app must keep: in the example shop, products, customers and orders</td>
+</tr>
+</tbody>
+</table>
+<p>You will hear <strong>frontend</strong> and <strong>backend</strong> often. The frontend is what the user sees and touches. The backend is the code that runs on a computer you control.</p>
+<p>A database stores records in tables, much like a spreadsheet. Each table has columns, and each record is one row. The example shop has a table of products, a table of customers and a table of orders. Here are two rows from its orders table.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Order number</th>
+<th>Customer</th>
+<th>Product</th>
+<th>Quantity</th>
+<th>Promised ship date</th>
+<th>Shipped</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2041</td>
+<td>R. Alvarez</td>
+<td>Honey Oat Swirl ice cream, pint</td>
+<td>3</td>
+<td>March 3</td>
+<td>March 3</td>
+</tr>
+<tr class="even">
+<td>2042</td>
+<td>J. Park</td>
+<td>Lemon Sugar cookies, box of 6</td>
+<td>1</td>
+<td>March 10</td>
+<td>(not yet)</td>
+</tr>
+</tbody>
+</table>
+<p>Think of a wholesaler that takes orders on a paper form. The customer holds the order form and can write anything on it. The order desk checks each order against the company’s rules. The warehouse holds the stock. The order form is the browser, the order desk is the server and the warehouse is the database.</p>
+<p><strong>Worked example.</strong> Find the three places in the example shop. The sales dashboard screen is in the browser. The shop’s rule that cancelled orders never count as sales is a business rule, so it belongs on the server or in the database. The orders themselves are rows in the database. Now find the same three places in your own app.</p>
+<p><strong>Rule of thumb:</strong> for any piece of your app, ask who controls the place it sits in.</p>
+</section>
+<section id="messages-connect-the-places" class="level2">
+<h2 class="anchored" data-anchor-id="messages-connect-the-places">Messages connect the places</h2>
+<p><strong>The three places never share memory. They talk only by sending requests and getting responses.</strong></p>
+<p>A <strong>request</strong> is a message one place sends another to ask for something. A <strong>response</strong> is the reply. The browser cannot reach into the database and change a row. It has to ask.</p>
+<p>An <strong>API</strong> is the list of requests a place agrees to answer. Your server has one, and your browser uses it. Outside services have them too. Session 9 covers APIs in detail.</p>
+<p>Departments in a company work the same way. Sales does not walk into the warehouse and take stock off the shelf. It sends an order, and the warehouse sends back a confirmation. Every handoff is a document and a reply.</p>
+<p><strong>Worked example.</strong> The shop owner ships order 2042 from the table above. Follow the hops.</p>
+<ol type="1">
+<li>The owner types today’s date in the ship date box and clicks Mark shipped.</li>
+<li>The browser runs a quick check: the box is not empty.</li>
+<li>The browser sends a request to the server: “Mark order 2042 shipped, today’s date.”</li>
+<li>The server checks the request again. Does order 2042 exist? Is it still open?</li>
+<li>The server asks the database to update the row for order 2042.</li>
+<li>The database saves the ship date, and replies that it is done.</li>
+<li>The server sends a response to the browser: “Saved.”</li>
+<li>The browser shows order 2042 as Shipped.</li>
+</ol>
+<p>Notice that the request is checked twice, once in the browser and once on the server. The next section explains why.</p>
+<p>In some apps the browser sends requests straight to the database for ordinary data, with no server in between. The services this course uses allow that. When it happens, the database’s own rules are the only check. Ask the agent which way your app works.</p>
+<section id="use-the-trace-to-find-a-problem" class="level3">
+<h3 class="anchored" data-anchor-id="use-the-trace-to-find-a-problem">Use the trace to find a problem</h3>
+<p>The trace is also your best tool when something looks wrong.</p>
+<p>The numbers on the shop’s dashboard are not typed in. They are calculated from the order rows each time. So a wrong number has three possible causes, one per place:</p>
+<ul>
+<li><strong>The stored data is wrong.</strong> A quantity was saved incorrectly in the database.</li>
+<li><strong>The rule is wrong.</strong> The calculation counts the wrong orders, such as cancelled ones.</li>
+<li><strong>The display is wrong.</strong> The right number arrives, and the screen shows it badly.</li>
+</ul>
+<p>Suppose Honey Oat Swirl pints show 30 units sold per week, and you counted 24 by hand. Do not ask the agent to “fix the dashboard.” Ask where the number is calculated, and ask to see the rows it used. Then you know which place holds the problem.</p>
+<p><strong>Rule of thumb:</strong> never correct a calculated number on the screen. Find the place that produced it.</p>
+</section>
+</section>
+<section id="the-trust-line" class="level2">
+<h2 class="anchored" data-anchor-id="the-trust-line">The trust line</h2>
+<p><strong>The user controls the browser, so a check that runs only in the browser can be skipped.</strong></p>
+<p>Every piece of your app that runs in the browser is first sent to the user’s device. Browsers include a panel called <strong>developer tools</strong>. It shows a page’s code, its stored data and every request the page sends. Anyone can open it. With it, a user can read what was sent to the browser, change it, and send requests by hand.</p>
+<p>Two consequences follow.</p>
+<ul>
+<li><strong>A browser check is a courtesy.</strong> It gives honest users fast feedback. It does not stop anyone who wants to get around it.</li>
+<li><strong>Anything sent to the browser is public.</strong> That includes any secret placed there by mistake.</li>
+</ul>
+<p>So picture a line between the browser and everything else. On the user’s side, nothing is guaranteed. Checks that matter must run again on your side of the line, on the server or in the database.</p>
+<p>A wholesaler already works this way. A customer can write any price on an order form. You do not bill from the customer’s number. The order desk prices the order from your own price list.</p>
+<p><strong>Worked example.</strong> In the example shop, an order that has shipped cannot be cancelled. The agent enforces this by turning the Cancel button grey once an order ships. That is the only check. A user opens developer tools, turns the button back on and cancels order 2041, which shipped on March 3. The three pints no longer count as sold, so the dashboard’s sales numbers are wrong. Worse, a refund may follow for ice cream the customer already has.</p>
+<p>The fix is to enforce the rule where the data lives. The server, or a rule in the database, refuses to cancel a shipped order. Keep the grey button as well. It tells honest users what they can do.</p>
+<p>Watch for the same mistake with access. Hiding a button or a link from some users does not stop them. A user who knows the web address can still send the request. Access is enforced only when the server or the database refuses. Session 7 covers logins and access.</p>
+<p><strong>Rule of thumb:</strong> if a rule protects money, data or a reported number, it must be enforced on the server or in the database.</p>
+</section>
+<section id="secrets-stay-on-the-server" class="level2">
+<h2 class="anchored" data-anchor-id="secrets-stay-on-the-server">Secrets stay on the server</h2>
+<p><strong>A secret key is safe on the server and public the moment it reaches the browser.</strong></p>
+<p>Many outside services charge for use. To use one, your app sends an <strong>API key</strong> with each request. An API key is a secret string the service gives your account. It says whose account is calling, and that account gets the bill.</p>
+<p>Your app will need one in session 10, when it calls an AI model. It may need others to send email or to reach your database with full access.</p>
+<p>Now apply the trust line. If a key is in the browser, any user can read it with developer tools. That user can then run up your bill or read all your data. So the rule is simple. Anything that needs a secret key goes through your server. The browser asks the server, the server calls the paid service with the key, and the server passes back only the result.</p>
+<p>A company handles its bank details the same way. The purchasing team can request a payment. Only the finance office holds the account credentials, and it makes the payment itself.</p>
+<p>Your project keeps its secret keys in a small settings file, commonly named <code>.env.local</code>. That file stays on your computer and on the server. It must never be sent to GitHub, because a secret placed in a public project is published. Session 3 explains how files are kept out of GitHub.</p>
+<p>If a secret key ever does reach the browser or a public project, treat it as public. Replace it with a new one at once, then move the work that needed it to the server.</p>
+<p><strong>Rule of thumb:</strong> if a user could read it in the browser, it is not a secret.</p>
+</section>
+<section id="who-runs-each-place-the-stack" class="level2">
+<h2 class="anchored" data-anchor-id="who-runs-each-place-the-stack">Who runs each place: the stack</h2>
+<p><strong>You control the server and the database, but other companies own the computers they run on.</strong></p>
+<p>A <strong>stack</strong> is the set of technologies an app is built from. Yours has a name for each part.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part of the app</th>
+<th>What can do the job in this course</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Screens and server code</td>
+<td>Next.js</td>
+<td>A toolkit for writing both the browser screens and the server code in one project</td>
+</tr>
+<tr class="even">
+<td>Hosting</td>
+<td>Vercel (or GitHub Pages, for an app with no server code)</td>
+<td>The company whose computers run your app and serve it at a web address</td>
+</tr>
+<tr class="odd">
+<td>Database</td>
+<td>Supabase</td>
+<td>A company that runs your database for you, and can also handle sign-in</td>
+</tr>
+<tr class="even">
+<td>Project storage</td>
+<td>GitHub</td>
+<td>Where your project’s files and their history are kept (session 3)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Hosting</strong> means running an app on computers that other people can reach over the internet.</p>
+<p>These are the services the readings use as examples. They are not the only choices, and some students will use others that do the same job. Whatever your app uses, you should be able to name the service for each row.</p>
+<p>This is the same choice a business makes about space. A small shop rarely builds its own building. It rents the space and keeps control of the business inside it. You rent the computers and keep control of the app.</p>
+<p>There are two copies of your app. While you build, a copy runs on your own computer at an address beginning with <code>localhost</code>. That name always means “this computer,” and nothing there leaves your machine. The <strong>live</strong> copy runs on the hosting company’s computers, where anyone with the address can reach it. In session 1 terms, changes to the computer copy are in groups 1 and 2. Changes to the live copy are in group 3.</p>
+<p>Other stacks exist, and none is the only reasonable choice. The advice for a first product is to pick a well-known, well-documented one. Its problems are already known and written about. An agent also writes better code for a popular stack, because it has seen far more examples.</p>
+<section id="you-speak-english-the-agent-writes-code" class="level3">
+<h3 class="anchored" data-anchor-id="you-speak-english-the-agent-writes-code">You speak English; the agent writes code</h3>
+<p>You direct the agent in plain English, but it does not build your app in English. It writes <strong>code</strong>: instructions in a <strong>programming language</strong>, a precise written language that computers can follow. Each place in your app has its usual languages.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Where it runs</th>
+<th>Common languages</th>
+<th>What they do</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Browser (frontend)</td>
+<td>HTML, CSS, JavaScript</td>
+<td>HTML lays out what is on a screen, CSS sets how it looks, and JavaScript makes it respond to clicks</td>
+</tr>
+<tr class="even">
+<td>Server (backend)</td>
+<td>TypeScript, JavaScript, Python, Java, Rust and others</td>
+<td>Run the business rules and talk to the database</td>
+</tr>
+<tr class="odd">
+<td>Both</td>
+<td>TypeScript</td>
+<td>JavaScript with extra checks added, so mistakes are caught before the app runs</td>
+</tr>
+</tbody>
+</table>
+<p>Browsers understand only HTML, CSS and JavaScript, so every app’s screens end up in those three. The server side has more choice. The projects in this course use TypeScript for both.</p>
+<p>These languages are standards for the same reason accountants share one set of accounting rules. Millions of people already know them. They are well documented, and free building blocks exist for almost any task. An AI agent has also learned from huge amounts of code written in them, so it writes them well.</p>
+<p>You will not need to write or read any of these languages. Knowing their names helps you read the map later in this reading and follow what the agent tells you.</p>
+<p><strong>Rule of thumb:</strong> when something breaks, first ask which service runs the place where it broke.</p>
+</section>
+</section>
+<section id="read-the-map-then-direct-by-place" class="level2">
+<h2 class="anchored" data-anchor-id="read-the-map-then-direct-by-place">Read the map, then direct by place</h2>
+<p><strong>A file’s name and folder tell you where it runs. A request that names each place gets each piece put in the right place.</strong></p>
+<section id="reading-the-map" class="level3">
+<h3 class="anchored" data-anchor-id="reading-the-map">Reading the map</h3>
+<p>Your project is a set of files. You do not need to read the code inside them, and no one expects you to understand it. You are welcome to look. Just do not change a file by hand unless you know what you are doing; ask the agent to make the change instead. You can read the map without reading the code, because the stack follows naming rules.</p>
+<p>A library works this way. A book’s call number tells you the section and the shelf before you open the book. A file’s folder and name do the same job.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Example file or folder</th>
+<th>What it holds</th>
+<th>Where it runs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>app/products/page.tsx</code></td>
+<td>One screen. The folder path is its web address: <code>/products</code></td>
+<td>Server or browser. Ask the agent.</td>
+</tr>
+<tr class="even">
+<td><code>app/api/orders/route.ts</code></td>
+<td>The server code that answers requests about orders</td>
+<td>Server only</td>
+</tr>
+<tr class="odd">
+<td><code>components/</code></td>
+<td>Screen pieces used on more than one screen</td>
+<td>Often the browser</td>
+</tr>
+<tr class="even">
+<td><code>supabase/migrations/</code></td>
+<td>Each change made to the database’s tables</td>
+<td>Database</td>
+</tr>
+<tr class="odd">
+<td><code>.env.local</code></td>
+<td>Secret keys and settings</td>
+<td>Server. Never sent to GitHub.</td>
+</tr>
+<tr class="even">
+<td><code>CLAUDE.md</code></td>
+<td>Your instruction file from session 1</td>
+<td>Read by the agent. Not part of the running app.</td>
+</tr>
+</tbody>
+</table>
+<p>Your file names may differ a little. The pattern will not. The ending of a file’s name tells you its language: <code>.tsx</code> and <code>.ts</code> files are TypeScript, and <code>.md</code> files are plain text.</p>
+<p>To see the map yourself in the desktop app, open the <strong>Files</strong> pane: click its button, or choose it from the <strong>⋮</strong> menu beside the pane buttons. It shows your project’s files, and you can click one to look inside. You can also ask the agent to draw the map for you: “List every file in this project and label it browser, server, database or tools only. Explain how you decided.” Then check two of its labels against the table. That is session 1’s third question applied to a map.</p>
+</section>
+<section id="directing-by-place" class="level3">
+<h3 class="anchored" data-anchor-id="directing-by-place">Directing by place</h3>
+<p>Once you can see the places, name them in your requests. Compare two requests for the same feature.</p>
+<p><strong>Vague:</strong> “Let the owner cancel an order.”</p>
+<p><strong>By place:</strong></p>
+<ul>
+<li><strong>Browser:</strong> add a Cancel button on each order that has not shipped, with a box for a reason. Show a message if the cancel fails.</li>
+<li><strong>Server:</strong> refuse to cancel an order that has already shipped. Require a reason.</li>
+<li><strong>Database:</strong> store the status Cancelled, the reason and the date. Never delete the row.</li>
+<li><strong>Dashboard:</strong> leave cancelled orders out of every sales number.</li>
+</ul>
+<p>The second request says where each rule is enforced. The browser part is there for convenience. The enforcing rules sit where the user cannot reach them.</p>
+<p>A restaurant ticket does the same thing in a kitchen. It tells the grill, the fryer and the salad station what each one makes. Nobody has to guess who does what.</p>
+<p>When you are unsure where something belongs, ask before the agent builds. Use plan mode from session 1: “Before changing anything, explain what will run in the browser, what will run on the server, what the database will store, and where each rule is enforced.”</p>
+<p><strong>Rule of thumb:</strong> a request is ready when it says what happens in each place and where each rule is enforced.</p>
+</section>
+</section>
+<section id="key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="key-terms">Key terms</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Plain-English meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Architecture</td>
+<td>The plan of an app: its main parts and how they connect</td>
+</tr>
+<tr class="even">
+<td>Browser (frontend, client)</td>
+<td>The program on the user’s device that shows your app, and the screens running inside it</td>
+</tr>
+<tr class="odd">
+<td>Server (backend)</td>
+<td>A computer you control that runs your app’s rules and keeps its secrets</td>
+</tr>
+<tr class="even">
+<td>Database</td>
+<td>Where the app stores what it must remember, as tables of rows</td>
+</tr>
+<tr class="odd">
+<td>Request, response</td>
+<td>A message one place sends another to ask for something, and the reply</td>
+</tr>
+<tr class="even">
+<td>API</td>
+<td>The list of requests a place agrees to answer</td>
+</tr>
+<tr class="odd">
+<td>Developer tools</td>
+<td>A panel in every browser that shows a page’s code, its stored data and the requests it sends</td>
+</tr>
+<tr class="even">
+<td>Trust line</td>
+<td>The line between the browser, which the user controls, and the server and database, which you control</td>
+</tr>
+<tr class="odd">
+<td>API key</td>
+<td>A secret string a paid service gives your account, which says whose account is calling</td>
+</tr>
+<tr class="even">
+<td>Stack</td>
+<td>The set of technologies an app is built from</td>
+</tr>
+<tr class="odd">
+<td>Code</td>
+<td>Instructions written in a programming language</td>
+</tr>
+<tr class="even">
+<td>Programming language</td>
+<td>A precise written language that computers can follow, such as JavaScript or Python</td>
+</tr>
+<tr class="odd">
+<td>Hosting</td>
+<td>Running an app on computers that other people can reach over the internet</td>
+</tr>
+<tr class="even">
+<td><code>localhost</code></td>
+<td>A name that always means the computer you are on</td>
+</tr>
+<tr class="odd">
+<td>Live</td>
+<td>The copy of your app that runs on the hosting company’s computers</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/week-01-directing-the-agent.html" class="pagination-link" aria-label="Directing the Agent — Vibe Programming, Session 1">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/week-03-github.html" class="pagination-link" aria-label="GitHub: Save Points, Review and the Human in the Loop — Vibe Programming, Session 3">
+        <span class="nav-page-text"><span class="chapter-title">GitHub: Save Points, Review and the Human in the Loop — Vibe Programming, Session 3</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

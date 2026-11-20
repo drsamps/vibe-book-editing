@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8 – Vibe Programming</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/week-09-apis-and-mcp.html" rel="next">
+<link href="../chapters/week-07-logins-and-security.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8575377b15774f46c10fa1d7752ca172.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<meta name="robots" content="noindex, nofollow">
+<script>
+  window.hypothesisConfig = function () {
+    return { groupsAllowlist: ["zJ3jnJaK"] };
+  };
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/week-08-deployment.html"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Vibe Programming</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About these readings</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-00-build-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Build and Publish Your App — Vibe Programming, Session 0</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-01-directing-the-agent.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-02-architecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-03-github.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">GitHub: Save Points, Review and the Human in the Loop — Vibe Programming, Session 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-04-user-experience.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">User Experience: Screens People Can Actually Use — Vibe Programming, Session 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-05-testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Testing: How Do You Know It Works? — Vibe Programming, Session 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-06-databases.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Databases: Where the Data Lives — Vibe Programming, Session 6</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-07-logins-and-security.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logins and Security: Who May Do What — Vibe Programming, Session 7</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-08-deployment.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-09-apis-and-mcp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-10-ai-in-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">AI in Your App: Models and What They Cost — Vibe Programming, Session 10</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning objectives</a></li>
+  <li><a href="#the-big-idea-more-than-one-copy-and-a-way-back" id="toc-the-big-idea-more-than-one-copy-and-a-way-back" class="nav-link" data-scroll-target="#the-big-idea-more-than-one-copy-and-a-way-back">The big idea: more than one copy, and a way back</a></li>
+  <li><a href="#environments-three-copies-of-your-app" id="toc-environments-three-copies-of-your-app" class="nav-link" data-scroll-target="#environments-three-copies-of-your-app">Environments: three copies of your app</a></li>
+  <li><a href="#the-settings-decide-the-database" id="toc-the-settings-decide-the-database" class="nav-link" data-scroll-target="#the-settings-decide-the-database">The settings decide the database</a></li>
+  <li><a href="#staging-a-rehearsal-that-matches-the-real-thing" id="toc-staging-a-rehearsal-that-matches-the-real-thing" class="nav-link" data-scroll-target="#staging-a-rehearsal-that-matches-the-real-thing">Staging: a rehearsal that matches the real thing</a></li>
+  <li><a href="#publishing-is-not-releasing" id="toc-publishing-is-not-releasing" class="nav-link" data-scroll-target="#publishing-is-not-releasing">Publishing is not releasing</a>
+  <ul class="collapse">
+  <li><a href="#staging-or-a-flag" id="toc-staging-or-a-flag" class="nav-link" data-scroll-target="#staging-or-a-flag">Staging or a flag?</a></li>
+  </ul></li>
+  <li><a href="#rolling-back-a-bad-publish" id="toc-rolling-back-a-bad-publish" class="nav-link" data-scroll-target="#rolling-back-a-bad-publish">Rolling back a bad publish</a>
+  <ul class="collapse">
+  <li><a href="#what-a-rollback-cannot-undo" id="toc-what-a-rollback-cannot-undo" class="nav-link" data-scroll-target="#what-a-rollback-cannot-undo">What a rollback cannot undo</a></li>
+  <li><a href="#repairing-the-data-afterward" id="toc-repairing-the-data-afterward" class="nav-link" data-scroll-target="#repairing-the-data-afterward">Repairing the data afterward</a></li>
+  </ul></li>
+  <li><a href="#see-what-is-happening-logs" id="toc-see-what-is-happening-logs" class="nav-link" data-scroll-target="#see-what-is-happening-logs">See what is happening: logs</a></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms">Key terms</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Adapted and simplified from the second half of Scott Murff’s chapter <a href="https://byu-strategy.github.io/product-management/09-version-control-testing-and-tech-debt.html">Version Control, Environments, and Deploys</a>, in his textbook Intro to Product Management. The ideas are his. The wording and the business examples were written for these readings.</em></p>
+<p>Reading time: about 20 minutes. Class opens with a short quiz on this reading.</p>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning objectives</h2>
+<p>By the end of this session you can:</p>
+<ol type="1">
+<li>Name the three environments your app runs in, and say what defines an environment.</li>
+<li>Find out which database each environment uses, and explain why that matters.</li>
+<li>Explain the difference between publishing a change and releasing it to users.</li>
+<li>Choose between a staging environment and a feature flag for a risky change.</li>
+<li>Roll back a bad publish, say what a rollback cannot undo, and find out what went wrong from the logs.</li>
+</ol>
+</section>
+<section id="the-big-idea-more-than-one-copy-and-a-way-back" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-more-than-one-copy-and-a-way-back">The big idea: more than one copy, and a way back</h2>
+<p>You have been publishing since the intro session. In session 3 you learned the gate: a pull request, a preview and a merge. After the merge, your hosting company publishes the change, and users have it.</p>
+<p>Until now that has been safe, because nobody depended on your app. After session 7 it has staff, customers and orders. A bad change now reaches real people and real data.</p>
+<p>Publishing a new version of an app is called a <strong>deployment</strong>. People say “deploy” as a verb.</p>
+<p>Here is the main point of the session: <strong>your app runs as more than one copy. You try a change on a copy that cannot hurt anyone. You also keep a fast way back for when a bad change gets through.</strong></p>
+</section>
+<section id="environments-three-copies-of-your-app" class="level2">
+<h2 class="anchored" data-anchor-id="environments-three-copies-of-your-app">Environments: three copies of your app</h2>
+<p><strong>An environment is one running copy of your app, defined by which code it runs, where it runs and which settings it reads.</strong></p>
+<p>You already have three. You met two of them in session 2 and the third in session 3.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Environment</th>
+<th>Which code</th>
+<th>Where it runs</th>
+<th>Who sees it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Your computer</strong></td>
+<td>Whatever you are working on, including changes you have not saved as a commit</td>
+<td>Your own computer, at an address starting with <code>localhost</code></td>
+<td>Only you</td>
+</tr>
+<tr class="even">
+<td><strong>Preview</strong></td>
+<td>The latest commit on one branch or pull request</td>
+<td>The hosting company’s computers, at its own address</td>
+<td>Anyone you send the address to</td>
+</tr>
+<tr class="odd">
+<td><strong>Production</strong></td>
+<td><code>main</code></td>
+<td>The hosting company’s computers, at your app’s real address</td>
+<td>Your users</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Production</strong> is the proper name for what earlier sessions called the live app.</p>
+<p>A theater works the same way. Actors rehearse in a practice room, hold a dress rehearsal on the real stage, and then perform for a paying audience. Nobody rehearses in front of the audience.</p>
+<p>One difference between the copies will surprise you. The computer copy is put together a page at a time, as you open each page, and it tolerates some mistakes. For a preview or for production, the hosting company makes a <strong>build</strong>: the whole app assembled at once, the way it will actually run. Some mistakes appear only in the build. An app can work on your computer and still fail to publish.</p>
+<p>That is why the build is one of the checks on a pull request, as you saw in session 5.</p>
+<p><strong>Rule of thumb:</strong> “it works on my computer” is a statement about one environment. Check the preview before you merge.</p>
+</section>
+<section id="the-settings-decide-the-database" class="level2">
+<h2 class="anchored" data-anchor-id="the-settings-decide-the-database">The settings decide the database</h2>
+<p><strong>An environment uses whichever database its settings name, so a copy of the app is not automatically a copy of the data.</strong></p>
+<p>The settings an environment reads are a short list of names and values kept outside the code. Session 2 called the computer’s version the secrets file. The list includes the address of the database and the keys to reach it.</p>
+<p>This leads to a fact that is easy to miss. The code and the database are separate choices. If your computer’s settings hold the production database’s address and keys, your computer is working on production data.</p>
+<p>It is like a store’s cash register in training mode. The screens look identical to the real ones. Whether a sale you ring up is practice or real depends on which mode the register is in.</p>
+<p><strong>Worked example.</strong> You set up your project in the intro session with one database. Its address and keys went into your computer’s settings and into the hosting company’s settings for previews and production. All three environments share one database.</p>
+<p>Now trace what happens.</p>
+<ul>
+<li>A test order you place on your computer appears in front of real customers.</li>
+<li>A reviewer who clicks around a preview of an unfinished feature changes real stock quantities.</li>
+<li>The made-up seed data from session 6, loaded on your computer, lands in the live tables.</li>
+</ul>
+<p>Your computer often holds the secret key too. Session 7 taught you that the secret key skips every policy. A mistake there reaches every user’s data.</p>
+<p>Session 6 gave the rule. Once real people use your app, stop building against its database. Give the computer and the previews a database of their own.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>What it is</th>
+<th>Good for</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>One database for everything</td>
+<td>Computer, previews and production share one</td>
+<td>Only until the first real user signs up</td>
+</tr>
+<tr class="even">
+<td>A second database</td>
+<td>A separate one with the same tables, filled with seed data</td>
+<td>Your computer and your previews</td>
+</tr>
+<tr class="odd">
+<td>A database on your computer</td>
+<td>A copy that runs on your own computer</td>
+<td>Your computer and your tests. Previews cannot reach it.</td>
+</tr>
+</tbody>
+</table>
+<p>The migrations from session 6 pay off here. Applying the same migrations to the second database gives it the same tables as production.</p>
+<p>You can check your own setup in one request: “Which database does each of my environments use? Tell me the names only. Do not print any key.”</p>
+<p><strong>Rule of thumb:</strong> before you load test data or try an unfinished feature, know which database you are pointed at.</p>
+</section>
+<section id="staging-a-rehearsal-that-matches-the-real-thing" class="level2">
+<h2 class="anchored" data-anchor-id="staging-a-rehearsal-that-matches-the-real-thing">Staging: a rehearsal that matches the real thing</h2>
+<p><strong>Staging is a copy of your app that closely matches production, where you try a change before any user sees it.</strong></p>
+<p>A <strong>staging</strong> environment has its own data and is not open to users. It is useful in proportion to how closely it matches production. It should be built the same way, hold the same settings with staging values, and have the same tables. Its database is separate.</p>
+<p>Every difference from production is a place where “it worked on staging” may not hold in production. So keep the differences few, and write them down. Two differences are always needed.</p>
+<ul>
+<li><strong>Outgoing messages.</strong> A staging app must not email real customers. It sends only to your own team.</li>
+<li><strong>Money.</strong> Anything that charges a card runs in the payment service’s test mode.</li>
+</ul>
+<p>A new restaurant rehearses this way with a soft opening. It serves a full evening of meals to friends and family before the public opening. The rehearsal is worth something only if the kitchen is set up the way it will be on opening night.</p>
+<p>The simplest staging setup costs nothing extra. Point your previews at the second database from the last section. Then every pull request’s preview is a staging site for that one change.</p>
+<p>What goes in the staging database? Seed data, or your own team’s accounts. Do not copy real customers’ personal data into staging. Session 7’s rule still applies: copying data somewhere is sending it there.</p>
+<p><strong>Rule of thumb:</strong> a staging environment with old tables or missing settings tells you little. Keep it matched, or do not trust it.</p>
+</section>
+<section id="publishing-is-not-releasing" class="level2">
+<h2 class="anchored" data-anchor-id="publishing-is-not-releasing">Publishing is not releasing</h2>
+<p><strong>A change can be published to production and still be switched off, so that you choose who sees it and when.</strong></p>
+<p>So far, “published” and “available to users” have been the same moment. They do not have to be.</p>
+<p>A <strong>feature flag</strong> is a setting the app checks before it shows new behavior. The new code is published to production for everyone. The flag decides, for each user, whether they get it. Turning the flag on for someone is called a <strong>release</strong>. It needs no new deployment. Turning it off stops the new behavior on the next request.</p>
+<p>The example shop does this with a new seasonal flavor. Ice cream keeps for months frozen, so the pints can sit in the freezer for weeks before the flavor appears in the online catalog. Stocking it and listing it are separate decisions. The shop may show it to its regular customers first.</p>
+<p>A flag can be kept in two ways.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Where the flag is kept</th>
+<th>What it allows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>In an environment’s settings</td>
+<td>On or off for everyone in that environment, such as on in previews and off in production</td>
+</tr>
+<tr class="even">
+<td>In a table in your database</td>
+<td>On for you, then for twenty customers, then for everyone, by editing a row</td>
+</tr>
+</tbody>
+</table>
+<p>Two cautions come with flags. First, check the flag on the server as well as on the screen. A hidden button over a working request can still be used, as you learned in sessions 2 and 7. Second, remove the flag once the feature is on for everyone. Forgotten flags are a kind of technical debt.</p>
+<section id="staging-or-a-flag" class="level3">
+<h3 class="anchored" data-anchor-id="staging-or-a-flag">Staging or a flag?</h3>
+<p>They answer different questions.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Staging</th>
+<th>Feature flag</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Where the new code runs</td>
+<td>A separate copy of the app</td>
+<td>Production</td>
+</tr>
+<tr class="even">
+<td>Whose data it touches</td>
+<td>Test data</td>
+<td>Real users’ data</td>
+</tr>
+<tr class="odd">
+<td>Who sees it</td>
+<td>Your team</td>
+<td>The users the flag is on for</td>
+</tr>
+<tr class="even">
+<td>How you undo it</td>
+<td>Nothing reached production</td>
+<td>Turn the flag off</td>
+</tr>
+</tbody>
+</table>
+<p>Ask two questions about the change.</p>
+<ol type="1">
+<li><strong>Does it take effect for everyone the moment it is published?</strong> A migration does. So does a changed setting. A flag cannot hide these, so try them on staging first.</li>
+<li><strong>If the first people who get it hit the worst case, whose data is harmed, and can it be undone?</strong> If the harm is limited to your own team’s data, a flag is enough. Some changes could do something permanent to someone outside your team, such as emailing customers. Try those on staging first, then release them behind a flag.</li>
+</ol>
+<p><strong>Worked example.</strong> The shop wants a reorder suggestion on the stock screen, using each product’s reorder point. It needs a new column in the products table.</p>
+<ol type="1">
+<li><strong>Computer.</strong> The agent builds it on a branch, against your computer’s database, with the feature behind a flag.</li>
+<li><strong>Preview on staging data.</strong> The migration is applied to the second database. You click through the preview. This is the first time the migration has run on tables shaped like production’s.</li>
+<li><strong>Production, flag off.</strong> You apply the migration to production and merge. The code is published. Customers and staff see no change.</li>
+<li><strong>Release.</strong> You turn the flag on for your own staff account, then for all staff.</li>
+<li><strong>Clean up.</strong> A small pull request removes the flag.</li>
+</ol>
+<p><strong>Rule of thumb:</strong> staging protects other people’s data. A flag controls who sees a change. Many teams use both.</p>
+</section>
+</section>
+<section id="rolling-back-a-bad-publish" class="level2">
+<h2 class="anchored" data-anchor-id="rolling-back-a-bad-publish">Rolling back a bad publish</h2>
+<p><strong>When production is broken, go back to the last good version first, and find the cause afterward.</strong></p>
+<p>Fixing a problem while users are hitting it is slow and error-prone. Returning to the last good version takes seconds and lets you fix the cause calmly.</p>
+<p>A production line has a cord any operator can pull to stop the line. Nobody is expected to diagnose the defect while bad units keep coming off the end. You stop first.</p>
+<p>You have two ways back.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Way back</th>
+<th>What it does</th>
+<th>When to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Rollback</strong> at the hosting company</td>
+<td>Points your app’s address back at an earlier published version, in seconds. Your project’s files do not change.</td>
+<td>First, when production is broken</td>
+</tr>
+<tr class="even">
+<td><strong>Revert</strong> (session 3)</td>
+<td>Makes a new commit that undoes the bad one. Merging it publishes the undo.</td>
+<td>Afterward, to make the undo permanent in your project</td>
+</tr>
+</tbody>
+</table>
+<p>One detail catches people. After a rollback, the hosting company may stop publishing new merges automatically until you tell it to resume. Your fix can be merged and still not be live. Check after any rollback.</p>
+<section id="what-a-rollback-cannot-undo" class="level3">
+<h3 class="anchored" data-anchor-id="what-a-rollback-cannot-undo">What a rollback cannot undo</h3>
+<p>Session 3 gave the limit, and it applies here in full. Every published version shares one production database. A rollback changes which code runs. It does not touch the rows.</p>
+<p>Suppose a bad publish ran for ten minutes and marked forty orders as shipped. After the rollback, the old code runs against forty wrong rows.</p>
+<p>The worst case is a migration that removes something. If the bad publish deleted a column, the old code now runs against a table it does not fit.</p>
+<p>So migrations should add before they remove. Adding a column is safe, because old code ignores a column it does not use. Removing one deserves a backup first, and a run on staging.</p>
+</section>
+<section id="repairing-the-data-afterward" class="level3">
+<h3 class="anchored" data-anchor-id="repairing-the-data-afterward">Repairing the data afterward</h3>
+<p>The rollback stops the damage. Repairing the rows is a second, slower job.</p>
+<ol type="1">
+<li><strong>Find the rows.</strong> Ask the agent which rows the bad version changed, using the time window and the logs covered below.</li>
+<li><strong>Plan the repair.</strong> In plan mode, have the agent propose how to put each row back. Read the plan, and ask how many rows it will touch, as in session 6.</li>
+<li><strong>Restore if you must.</strong> If the damage is too wide to repair row by row, restore the database from a backup taken before the bad publish. Changes made since that backup are lost, so this is the last resort.</li>
+</ol>
+<p>A restore needs a backup to exist. Database plans differ in whether they keep backups and how far back they go. Find out what yours keeps now, before you need it.</p>
+<p><strong>Rule of thumb:</strong> practice a rollback once on a harmless change, and check what backups you have. The first time you need either should not be the first time you look.</p>
+</section>
+</section>
+<section id="see-what-is-happening-logs" class="level2">
+<h2 class="anchored" data-anchor-id="see-what-is-happening-logs">See what is happening: logs</h2>
+<p><strong>You cannot fix what you cannot see, and most users who hit an error leave without telling you.</strong></p>
+<p>A <strong>log</strong> is a line of text the app writes when something happens. An <strong>error report</strong> is a record of a failure with its details, collected automatically.</p>
+<p>Each of the three places from session 2 keeps its own record.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Where it ran</th>
+<th>Where to look</th>
+<th>What you find</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Browser</td>
+<td>The Console and Network tabs from session 5</td>
+<td>Errors on that one device</td>
+</tr>
+<tr class="even">
+<td>Server</td>
+<td>The hosting company’s logs</td>
+<td>Errors and messages from your server code</td>
+</tr>
+<tr class="odd">
+<td>Database</td>
+<td>The database service’s logs</td>
+<td>Refused requests and failed sign-ins</td>
+</tr>
+</tbody>
+</table>
+<p>The browser’s record is only on the device in front of you. To see what real users hit, an app can add an error reporting service. It collects every failure from every user, groups them and can email you.</p>
+<p>A package leaves a record the same way. Each handoff is scanned. When a package goes missing, nobody guesses. They read the scan history and find the last place it was seen.</p>
+<p>A useful log line says what happened, where, and an ID you can trace: “Ship order 2042, staff 7, refused: order is cancelled.” It must not hold personal data, passwords or tokens. Session 7’s rule applies, because logs are stored by your hosting company and can be read by anyone on the project.</p>
+<p>One practical warning. On free plans, hosting companies keep server logs for only a short time. Look soon after a problem.</p>
+<p><strong>Rule of thumb:</strong> when a user reports a problem, get the time it happened. Then read the logs before you ask the agent to guess.</p>
+</section>
+<section id="key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="key-terms">Key terms</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Plain-English meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Deployment</td>
+<td>Publishing a new version of an app</td>
+</tr>
+<tr class="even">
+<td>Environment</td>
+<td>One running copy of the app: which code, where it runs and which settings it reads</td>
+</tr>
+<tr class="odd">
+<td>Preview</td>
+<td>A copy of the app built from one branch or pull request, at its own address</td>
+</tr>
+<tr class="even">
+<td>Production</td>
+<td>The copy at your app’s real address, which your users use</td>
+</tr>
+<tr class="odd">
+<td>Build</td>
+<td>The whole app assembled at once, the way it will actually run</td>
+</tr>
+<tr class="even">
+<td>Staging</td>
+<td>An environment kept as close to production as possible, with its own data, for trying a change</td>
+</tr>
+<tr class="odd">
+<td>Feature flag</td>
+<td>A setting the app checks to decide which users get new behavior</td>
+</tr>
+<tr class="even">
+<td>Release</td>
+<td>Turning a published feature on for some or all users</td>
+</tr>
+<tr class="odd">
+<td>Rollback</td>
+<td>Pointing the app’s address back at an earlier published version</td>
+</tr>
+<tr class="even">
+<td>Log</td>
+<td>A line of text the app writes when something happens</td>
+</tr>
+<tr class="odd">
+<td>Error report</td>
+<td>A record of a failure with its details, collected automatically</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/week-07-logins-and-security.html" class="pagination-link" aria-label="Logins and Security: Who May Do What — Vibe Programming, Session 7">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Logins and Security: Who May Do What — Vibe Programming, Session 7</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/week-09-apis-and-mcp.html" class="pagination-link" aria-label="Connections: APIs and MCP — Vibe Programming, Session 9">
+        <span class="nav-page-text"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

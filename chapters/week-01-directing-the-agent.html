@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Directing the Agent — Vibe Programming, Session 1 – Vibe Programming</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/week-02-architecture.html" rel="next">
+<link href="../chapters/week-00-build-your-app.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-8575377b15774f46c10fa1d7752ca172.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<meta name="robots" content="noindex, nofollow">
+<script>
+  window.hypothesisConfig = function () {
+    return { groupsAllowlist: ["zJ3jnJaK"] };
+  };
+</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/week-01-directing-the-agent.html"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></a></li></ol></nav>
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Site">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Vibe Programming</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">About these readings</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-00-build-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Build and Publish Your App — Vibe Programming, Session 0</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-01-directing-the-agent.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-02-architecture.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-03-github.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">GitHub: Save Points, Review and the Human in the Loop — Vibe Programming, Session 3</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-04-user-experience.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">User Experience: Screens People Can Actually Use — Vibe Programming, Session 4</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-05-testing.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Testing: How Do You Know It Works? — Vibe Programming, Session 5</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-06-databases.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Databases: Where the Data Lives — Vibe Programming, Session 6</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-07-logins-and-security.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Logins and Security: Who May Do What — Vibe Programming, Session 7</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-08-deployment.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Deployment: Publishing, and Undoing a Bad Publish — Vibe Programming, Session 8</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-09-apis-and-mcp.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Connections: APIs and MCP — Vibe Programming, Session 9</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/week-10-ai-in-your-app.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">AI in Your App: Models and What They Cost — Vibe Programming, Session 10</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link active" data-scroll-target="#learning-objectives">Learning objectives</a></li>
+  <li><a href="#the-big-idea-you-are-the-manager" id="toc-the-big-idea-you-are-the-manager" class="nav-link" data-scroll-target="#the-big-idea-you-are-the-manager">The big idea: you are the manager</a></li>
+  <li><a href="#build-by-conversation" id="toc-build-by-conversation" class="nav-link" data-scroll-target="#build-by-conversation">Build by conversation</a></li>
+  <li><a href="#question-1-what-can-it-see" id="toc-question-1-what-can-it-see" class="nav-link" data-scroll-target="#question-1-what-can-it-see">Question 1: What can it see?</a></li>
+  <li><a href="#the-instruction-file-what-the-agent-sees-every-time" id="toc-the-instruction-file-what-the-agent-sees-every-time" class="nav-link" data-scroll-target="#the-instruction-file-what-the-agent-sees-every-time">The instruction file: what the agent sees every time</a></li>
+  <li><a href="#question-2-what-may-it-do" id="toc-question-2-what-may-it-do" class="nav-link" data-scroll-target="#question-2-what-may-it-do">Question 2: What may it do?</a></li>
+  <li><a href="#modes-and-rules-setting-the-approval-limit" id="toc-modes-and-rules-setting-the-approval-limit" class="nav-link" data-scroll-target="#modes-and-rules-setting-the-approval-limit">Modes and rules: setting the approval limit</a>
+  <ul class="collapse">
+  <li><a href="#three-modes" id="toc-three-modes" class="nav-link" data-scroll-target="#three-modes">Three modes</a></li>
+  <li><a href="#advice-is-not-enforcement" id="toc-advice-is-not-enforcement" class="nav-link" data-scroll-target="#advice-is-not-enforcement">Advice is not enforcement</a></li>
+  </ul></li>
+  <li><a href="#question-3-how-will-you-know-it-worked" id="toc-question-3-how-will-you-know-it-worked" class="nav-link" data-scroll-target="#question-3-how-will-you-know-it-worked">Question 3: How will you know it worked?</a></li>
+  <li><a href="#key-terms" id="toc-key-terms" class="nav-link" data-scroll-target="#key-terms">Key terms</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content" tabindex="-1">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Directing the Agent — Vibe Programming, Session 1</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><em>Adapted and simplified from Scott Murff’s chapter <a href="https://byu-strategy.github.io/product-management/02-directing-the-agent.html">Directing the Agent</a>, in his textbook Intro to Product Management. The ideas are his. The wording and the business examples were written for these readings.</em></p>
+<p>Reading time: about 20 minutes. Class opens with a short quiz on this reading.</p>
+<section id="learning-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="learning-objectives">Learning objectives</h2>
+<p>By the end of this session you can:</p>
+<ol type="1">
+<li>Name the three questions that give you control over an AI coding agent.</li>
+<li>Explain why an agent “forgets,” and choose what belongs in its instruction file.</li>
+<li>Sort an action into one of three groups by how far it reaches and how you would undo it.</li>
+<li>Choose plan, manual or auto mode for a task, and say when a rule is needed instead of an instruction.</li>
+<li>Check the agent’s work with three checks before you accept it.</li>
+</ol>
+</section>
+<section id="the-big-idea-you-are-the-manager" class="level2">
+<h2 class="anchored" data-anchor-id="the-big-idea-you-are-the-manager">The big idea: you are the manager</h2>
+<p>In session 0 an AI agent built your app while you mostly watched. This session you learn to direct it.</p>
+<p>The readings use one example app, The Dreamery, a made-up campus creamery that sells ice cream and cookies in its campus shop and online. It has four parts:</p>
+<ul>
+<li><strong>Products:</strong> what the shop sells, with a price and the number in stock.</li>
+<li><strong>Customers:</strong> who buys from the shop.</li>
+<li><strong>Orders:</strong> who bought what, how many, when the order was placed, the date the shop promised to ship it and the date it actually shipped.</li>
+<li><strong>A sales dashboard:</strong> numbers calculated from the order history.</li>
+</ul>
+<p>The dashboard shows three numbers for each product. <strong>Units sold per week</strong> is the average number sold each week over the last four weeks. <strong>Days of stock left</strong> is the number in stock divided by the average number sold per day. A <strong>low-stock alert</strong> flags any product with fewer than 14 days of stock left.</p>
+<p>Your own app keeps its own records and calculates its own numbers. As you read, find the matching piece in your app.</p>
+<p>Here is the main point of the session: <strong>you control an agent by answering three questions.</strong></p>
+<ol type="1">
+<li><strong>What can it see?</strong> The agent works only from the information in front of it.</li>
+<li><strong>What may it do?</strong> You decide which actions it takes alone and which wait for you.</li>
+<li><strong>How will you know it worked?</strong> The agent’s report is a claim. Your own check is the evidence.</li>
+</ol>
+<p>Think of the agent as a capable new employee on the first day of work. The new hire knows how a shop works but knows nothing about your products, your rules or your priorities. You would brief that person, set a spending limit and review the first few decisions. You will do the same three things with the agent.</p>
+<p>The rest of this reading covers one habit and then the three questions.</p>
+</section>
+<section id="build-by-conversation" class="level2">
+<h2 class="anchored" data-anchor-id="build-by-conversation">Build by conversation</h2>
+<p><strong>You get better results from a series of small requests than from one large one.</strong></p>
+<p>You do not need a perfect prompt. You need a conversation: ask for one small thing, look at the result, then ask for the next.</p>
+<p>Compare two ways of asking for the same improvement to the dashboard.</p>
+<p><strong>One large request:</strong> “Add low-stock warnings with color coding, a ranking of products, a monthly report and a reorder suggestion.” The agent builds all of it at once. If the ranking looks wrong, you cannot tell which part caused the problem.</p>
+<p><strong>A conversation:</strong></p>
+<ol type="1">
+<li>“Add a column to the dashboard showing each product’s days of stock left.” You check it.</li>
+<li>“Show the number in red when it is below 14.” You check it.</li>
+<li>“Sort the list so the lowest number is at the top.” You check it.</li>
+</ol>
+<p>Each step is small enough to check in a minute. A mistake is caught before the next step is built on top of it.</p>
+<p>A marketer does the same thing with a big email campaign. They send it to a small test group first and check the results before sending it to everyone. A small request is your test send.</p>
+<p>Three habits make the conversation work:</p>
+<ul>
+<li><strong>Say what you want and why.</strong> “The owner needs to see what to reorder at a glance” helps the agent more than “add colors.”</li>
+<li><strong>Think out loud.</strong> If you are unsure, say so, and ask the agent for two or three options.</li>
+<li><strong>Write it down once it is settled.</strong> Conversation is for exploring. When you know what you want to keep, put it in writing, so the next conversation does not have to rediscover it.</li>
+</ul>
+<p><strong>Rule of thumb:</strong> if you could not check a request in a minute or two, split it.</p>
+</section>
+<section id="question-1-what-can-it-see" class="level2">
+<h2 class="anchored" data-anchor-id="question-1-what-can-it-see">Question 1: What can it see?</h2>
+<p><strong>The agent can use only what is in front of it right now.</strong></p>
+<p>Everything the agent can read at one moment is called its <strong>context</strong>. The context holds the tool’s own built-in instructions, your instruction file (covered below), your messages and the agent’s replies. It also holds the results of the agent’s actions, such as files it opened.</p>
+<p>Whatever is not in the context does not exist for the agent. That includes yesterday’s conversation, a decision you made in your head and a file it never opened.</p>
+<p>Context has two limits that surprise new users.</p>
+<ul>
+<li><strong>It is finite.</strong> In a long conversation, older material is summarized to make room. An instruction you gave early on can be lost in the summary.</li>
+<li><strong>It does not carry over.</strong> A <strong>conversation</strong> is one continuous exchange with the agent. Claude Code’s own screens call it a “session.” A new conversation starts without your earlier messages.</li>
+</ul>
+<p>A restaurant runs on the same limit. The dinner shift knows only what the lunch shift wrote in the handover notes. Anything said out loud at noon and never written down is gone by 6 p.m.</p>
+<p><strong>Worked example.</strong> On Monday you tell the agent, “Leave cancelled orders out of every sales number.” It does. On Wednesday you start a new conversation and ask for a weekly sales report. The report counts cancelled orders. The agent did not disobey you. The instruction you gave on Monday did not carry over to Wednesday’s new conversation, so the agent never saw it.</p>
+<p>Two controls help you manage context.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>What you want</th>
+<th>Desktop app</th>
+<th>In the terminal</th>
+<th>When to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>See what is filling the context</td>
+<td>Open the <strong>Context</strong> card in the session rail beside the chat (click <strong>Show session rail</strong> in the conversation’s title bar)</td>
+<td>Type <code>/context</code></td>
+<td>When the agent seems to be forgetting</td>
+</tr>
+<tr class="even">
+<td>Start a new, empty conversation</td>
+<td>Click <strong>+ New</strong> in the sidebar</td>
+<td>Type <code>/clear</code></td>
+<td>When you switch to a different task</td>
+</tr>
+</tbody>
+</table>
+<p>In a new conversation, everything you said before is gone. Your instruction file still loads. That difference is the subject of the next section.</p>
+</section>
+<section id="the-instruction-file-what-the-agent-sees-every-time" class="level2">
+<h2 class="anchored" data-anchor-id="the-instruction-file-what-the-agent-sees-every-time">The instruction file: what the agent sees every time</h2>
+<p><strong>Anything that must survive goes in a file the agent re-reads, not in a chat message.</strong></p>
+<p>Claude Code reads a file named <code>CLAUDE.md</code> at the start of every conversation. This reading calls it the <strong>instruction file</strong>. It is plain text, and it holds the things you would otherwise explain again and again.</p>
+<p>Think of the opening checklist taped inside a restaurant’s kitchen door. It does not depend on who is on shift or what was said yesterday. Whoever starts work reads the same sheet.</p>
+<p>Write what the agent cannot work out by reading your app: your decisions, your business rules and your limits. A good instruction file for the example shop has four parts.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Part</th>
+<th>Example for the shop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>What the app is</td>
+<td>“The records for a small campus creamery that sells ice cream and cookies in its shop and online: products, customers, orders and a sales dashboard.”</td>
+</tr>
+<tr class="even">
+<td>How the business talks</td>
+<td>“Days of stock left is the number in stock divided by average daily sales over the last 28 days. Cancelled orders never count as sales.”</td>
+</tr>
+<tr class="odd">
+<td>What done means</td>
+<td>“A change is not done until the app runs and I have seen the new feature work.”</td>
+</tr>
+<tr class="even">
+<td>What to leave alone</td>
+<td>“Never publish the live app or change customer records without asking me first.”</td>
+</tr>
+</tbody>
+</table>
+<p>You do not have to write it from a blank page. Ask the agent to draft one, or type <code>/init</code>, which writes a starter file by reading your project. Then edit the draft the way you would edit a new employee’s job description.</p>
+<p>Keep the file short. Claude’s documentation suggests fewer than 200 lines. Every line takes up context in every conversation, and a long file is followed less reliably.</p>
+<p>Keep it current as well. If you change a business rule, change the file the same day. An out-of-date instruction misleads every conversation that reads it.</p>
+<p>Claude Code also saves some notes of its own as it works. It decides what to save, and the notes stay on one computer. Do not rely on them for a rule you care about.</p>
+<p><strong>Rule of thumb:</strong> if you have told the agent something twice, it belongs in the instruction file.</p>
+</section>
+<section id="question-2-what-may-it-do" class="level2">
+<h2 class="anchored" data-anchor-id="question-2-what-may-it-do">Question 2: What may it do?</h2>
+<p><strong>Before you let the agent act alone, ask how far the action reaches and whether you can undo it.</strong></p>
+<p>An action’s <strong>blast radius</strong> is everything it can change if it goes wrong. The farther an action reaches, the fewer ways you have to undo it.</p>
+<p>Claude Code helps with the nearest kind of action. It saves a <strong>checkpoint</strong>, a snapshot of your files, before each message you send. To <strong>rewind</strong> is to restore your files to an earlier checkpoint. Your instructor will show you how to rewind in the desktop app. In the terminal, you type <code>/rewind</code>. A checkpoint covers only the edits the agent makes with its own file-editing tool. It does not cover anything else.</p>
+<p>So every action falls into one of three groups.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Group</th>
+<th>Example in the shop</th>
+<th>How you undo it</th>
+<th>So you</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1. The agent edits a file in your project</td>
+<td>Renaming the “Items” heading to “Products”; adding a days-of-stock column</td>
+<td>Rewind</td>
+<td>Let it run</td>
+</tr>
+<tr class="even">
+<td>2. The agent runs a command that deletes or moves files on your computer</td>
+<td>Deleting the folder of old sample data</td>
+<td>Only from a save point you made earlier (session 3)</td>
+<td>Make a save point first</td>
+</tr>
+<tr class="odd">
+<td>3. The action leaves your computer</td>
+<td>Publishing the live app; changing the live customer records; sending an email</td>
+<td>You cannot. You can only fix it afterward.</td>
+<td>Approve it yourself</td>
+</tr>
+</tbody>
+</table>
+<p>You already know this pattern from billing. A typo in a draft invoice costs nothing to fix. An invoice already emailed to a customer takes an apology and a corrected copy. A payment already sent to the wrong account may never come back.</p>
+<p>Group 3 deserves the most care. Once the live app is published, people may have seen the wrong page. Once the live customer records are changed, the old values are gone unless someone kept a backup. Once an email is sent, it is in someone’s inbox.</p>
+<p>In this course, your project is stored on a service called GitHub, and sending your changes there also updates your live app. Treat that step as a group 3 action. Session 3 covers GitHub and save points. Session 8 covers publishing.</p>
+<p><strong>Rule of thumb:</strong> ask two questions before each kind of action. How far does it reach? Can I undo it?</p>
+</section>
+<section id="modes-and-rules-setting-the-approval-limit" class="level2">
+<h2 class="anchored" data-anchor-id="modes-and-rules-setting-the-approval-limit">Modes and rules: setting the approval limit</h2>
+<p><strong>A mode sets how much the agent does without asking. A rule makes it stop no matter what.</strong></p>
+<section id="three-modes" class="level3">
+<h3 class="anchored" data-anchor-id="three-modes">Three modes</h3>
+<p>A <strong>mode</strong> is a setting that decides which actions the agent takes without your approval. Claude Code has several. You need three this session.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Mode</th>
+<th>What the agent does</th>
+<th>Use it when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Plan</strong></td>
+<td>Reads your project, looks around and writes a plan. It does not change your files until you approve the plan.</td>
+<td>The task is large, unclear or risky</td>
+</tr>
+<tr class="even">
+<td><strong>Manual</strong></td>
+<td>Reads on its own. Asks you before each change or action.</td>
+<td>You are learning, or the work is sensitive</td>
+</tr>
+<tr class="odd">
+<td><strong>Auto</strong></td>
+<td>Works without stopping to ask. A second AI model reviews each action first and blocks the ones that look risky.</td>
+<td>The task is long, routine and easy to undo</td>
+</tr>
+</tbody>
+</table>
+<p>Always check which mode you are in before you start. In the desktop app, you pick the mode from a selector under the message box. The app remembers the last mode you picked for each project, except plan mode, so a new conversation may start in auto. Do not assume the agent will ask first. In the terminal, recent versions start in auto, and pressing <code>Shift+Tab</code> changes the mode.</p>
+<p>Match the mode to the blast radius. Renaming a heading across the app is a group 1 action, so auto is fine. Changing every product price in the live data is group 3. Have the agent plan it in plan mode, read the plan, and then approve the action yourself.</p>
+</section>
+<section id="advice-is-not-enforcement" class="level3">
+<h3 class="anchored" data-anchor-id="advice-is-not-enforcement">Advice is not enforcement</h3>
+<p>Your instruction file is advice. The agent usually follows it, but not every time. A later message in the chat can even talk it out of a written instruction.</p>
+<p>Auto mode’s reviewer is not a guarantee either. It allows routine work, and it can treat sending your changes to GitHub as routine.</p>
+<p>For a line that must never be crossed without you, use a <strong>permission rule</strong>. A permission rule is a setting that Claude Code checks before the agent acts, whatever the agent has decided. Two kinds matter here.</p>
+<ul>
+<li>An <strong>ask rule</strong> makes the agent stop and ask you every time, even in auto mode.</li>
+<li>A <strong>deny rule</strong> blocks the action outright, in every mode.</li>
+</ul>
+<p>Company spending works the same way. A memo that says “get approval for any purchase over $5,000” is advice, and a rushed employee can ignore it. An approval limit built into the company’s purchasing system is enforcement. The system will not release the payment until a manager approves it.</p>
+<p>You will not write permission rules yourself this session. Your instructor will show you where they are set. Your job is to know which lines need one. Publishing the live app is the first.</p>
+<p><strong>Rule of thumb:</strong> if a rule must hold every single time, it cannot live only in the instruction file.</p>
+</section>
+</section>
+<section id="question-3-how-will-you-know-it-worked" class="level2">
+<h2 class="anchored" data-anchor-id="question-3-how-will-you-know-it-worked">Question 3: How will you know it worked?</h2>
+<p><strong>A task is done when you have seen it work, not when the agent says it is done.</strong></p>
+<p>An agent stops when the work looks finished to it. Its report is sincere and sometimes wrong. If the only check is one the agent wrote for itself, the check can be wrong in the same way the work is wrong.</p>
+<p>A store receives deliveries on the same principle. It does not pay because the driver’s slip says “40 boxes.” Someone counts the boxes. Treat the agent’s report like the driver’s slip.</p>
+<p>Use three checks, in order.</p>
+<ol type="1">
+<li><strong>Look at what changed.</strong> Ask the agent to list every file it changed and to explain each change in plain English. If it touched something you did not ask about, find out why.</li>
+<li><strong>Run the app and use the feature.</strong> Click through it the way a customer or the owner would.</li>
+<li><strong>Confirm the behavior you asked for, including the awkward cases.</strong> An <strong>edge case</strong> is an unusual situation where software tends to break.</li>
+</ol>
+<p><strong>Worked example.</strong> You ask for a “Shipped late” flag on any order that shipped after its promised ship date. The agent adds it and tests it with an order that shipped three days late. The flag appears, and the agent reports success.</p>
+<p>You run the app. Every order that shipped on its promised date is also marked late. The cause is small. The computer stored each promised date as midnight at the start of that day. A package that left at 2 p.m. on the right day left “after” midnight, so it counted as late.</p>
+<p>The agent’s test tried only an order that was three days late, so the test passed. The agent’s work and the agent’s test missed the same case. Your own rule caught it: an order that ships on its promised date is on time.</p>
+<p>This is where your business knowledge beats the agent’s. You know which cases happen in a real shop:</p>
+<ul>
+<li>An order that ships on the promised date itself.</li>
+<li>An order that has not shipped yet.</li>
+<li>A new product with no sales yet, so there is nothing to divide by.</li>
+<li>An order that ships in two parts.</li>
+</ul>
+<p>You can also check the arithmetic by hand. Suppose a flavor has 60 pints in stock and sold 140 pints in the last 28 days. That is 5 pints a day, so days of stock left must be 12. If the dashboard says anything else, the dashboard is wrong.</p>
+<p>Two habits make checking faster:</p>
+<ul>
+<li><strong>Predict before you look.</strong> Before you read the agent’s report, write down one result that would prove the feature works. Add one edge case that might break it. Then check both.</li>
+<li><strong>Ask for evidence.</strong> “Show me the flag for an order shipped early, on the promised date and three days late” gets more than “does it work?”</li>
+</ul>
+<p><strong>Match the check to the risk.</strong> A changed heading or color needs only a look at what changed. Anything that calculates, saves data or changes what a customer or the owner sees needs all three checks.</p>
+</section>
+<section id="key-terms" class="level2">
+<h2 class="anchored" data-anchor-id="key-terms">Key terms</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>Plain-English meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Agent</td>
+<td>An AI tool that takes actions on your project, such as editing files, and does not only answer questions</td>
+</tr>
+<tr class="even">
+<td>Days of stock left</td>
+<td>The number in stock divided by the average number sold per day</td>
+</tr>
+<tr class="odd">
+<td>Context</td>
+<td>Everything the agent can read at one moment</td>
+</tr>
+<tr class="even">
+<td>Conversation</td>
+<td>One continuous exchange with the agent; Claude Code’s screens call it a “session”</td>
+</tr>
+<tr class="odd">
+<td>Instruction file (<code>CLAUDE.md</code>)</td>
+<td>A plain-text file the agent reads at the start of every conversation</td>
+</tr>
+<tr class="even">
+<td>Blast radius</td>
+<td>Everything an action can change if it goes wrong</td>
+</tr>
+<tr class="odd">
+<td>Checkpoint</td>
+<td>A snapshot of your files that Claude Code saves before each message you send</td>
+</tr>
+<tr class="even">
+<td>Rewind</td>
+<td>Restoring your files to an earlier checkpoint</td>
+</tr>
+<tr class="odd">
+<td>Mode</td>
+<td>A setting that decides which actions the agent takes without your approval</td>
+</tr>
+<tr class="even">
+<td>Plan mode</td>
+<td>The agent writes a plan and does not change your files until you approve it</td>
+</tr>
+<tr class="odd">
+<td>Manual mode</td>
+<td>The agent asks before each change or action</td>
+</tr>
+<tr class="even">
+<td>Auto mode</td>
+<td>The agent works without asking, and a second AI model reviews each action first</td>
+</tr>
+<tr class="odd">
+<td>Permission rule</td>
+<td>A setting checked before the agent acts, whatever the agent has decided</td>
+</tr>
+<tr class="even">
+<td>Ask rule</td>
+<td>A permission rule that makes the agent stop and ask every time</td>
+</tr>
+<tr class="odd">
+<td>Deny rule</td>
+<td>A permission rule that blocks an action in every mode</td>
+</tr>
+<tr class="even">
+<td>Edge case</td>
+<td>An unusual situation where software tends to break</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      const newWindowLabel = "(opens in a new tab)";
+      const newWindowNoteId = "quarto-ext-newwindow-label";
+      // Links reference one hidden label through aria-describedby, so the
+      // announcement never changes their accessible name.
+      var describeNewWindow = (link) => {
+        if (!window.document.getElementById(newWindowNoteId)) {
+          var newWindowNote = window.document.createElement("span");
+          newWindowNote.id = newWindowNoteId;
+          newWindowNote.hidden = true;
+          newWindowNote.textContent = newWindowLabel;
+          window.document.body.appendChild(newWindowNote);
+        }
+        var describedBy = (link.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean);
+        if (!describedBy.includes(newWindowNoteId)) {
+          describedBy.push(newWindowNoteId);
+          link.setAttribute("aria-describedby", describedBy.join(" "));
+        }
+      }
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            describeNewWindow(link);
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
+  <div class="nav-page nav-page-previous">
+      <a href="../chapters/week-00-build-your-app.html" class="pagination-link" aria-label="Build and Publish Your App — Vibe Programming, Session 0">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Build and Publish Your App — Vibe Programming, Session 0</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/week-02-architecture.html" class="pagination-link" aria-label="Architecture: The Pieces and How They Fit — Vibe Programming, Session 2">
+        <span class="nav-page-text"><span class="chapter-title">Architecture: The Pieces and How They Fit — Vibe Programming, Session 2</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
